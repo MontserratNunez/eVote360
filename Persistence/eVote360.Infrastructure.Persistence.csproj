@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="EntityConfiguration\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

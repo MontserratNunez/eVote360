@@ -3,13 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eVote360.Controllers
 {
-    public class HomeController : Controller
+    public class HomeDirectorController : Controller
     {
 
-
-        public HomeController()
+        public HomeDirectorController()
         {
-
         }
 
         public IActionResult Index()

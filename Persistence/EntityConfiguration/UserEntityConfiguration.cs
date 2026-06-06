@@ -15,7 +15,9 @@ namespace eVote360.Infrastructure.Persistence.EntityConfigurations
 
             #region Property configurations
             builder.Property(u => u.Name).IsRequired().HasMaxLength(200);
-            builder.Property(u => u.Password).IsRequired().HasMaxLength(int.MaxValue);//nvarchar(max)
+            builder.Property(u => u.Password).IsRequired().HasMaxLength(int.MaxValue);
+            builder.HasIndex(c => c.UserName).IsUnique();
+            builder.HasIndex(c => c.Email).IsUnique();
             #endregion
         }
     }
