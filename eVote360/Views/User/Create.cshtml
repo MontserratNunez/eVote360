@@ -5,59 +5,91 @@
     ViewData["Title"] = "Create User";
 }
 
-<div class="col-12 col-md-6 offset-md-3 ">
-    <div class="card">
-        <div class="card-header bg-success text-light"><h5 class="text-center">New User</h5></div>
-        <div class="card-body">
-            <form asp-controller="User" asp-action="Create" method="POST" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label asp-for="Name" class="form-label">Name:</label>
-                    <input class="form-control" asp-for="Name" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
+
+<div class="container mt-4">
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @ViewBag.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
+
+            <div class="card card-modern shadow-sm">
+
+                <div class="card-header pt-4">
+                    <div class="text-center">
+                        <h4 class="fw-bold mb-1">Nuevo usuario</h4>
+                        <p class="text-muted small m-1">Completa la información del usuario</p>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label asp-for="LastName" class="form-label">LastName:</label>
-                    <input class="form-control" asp-for="LastName" />
-                    <span asp-validation-for="LastName" class="text-danger"></span>
+
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label text-muted small">Nombre:</label>
+                            <input asp-for="Name" class="form-control">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LastName" class="form-label text-muted small">Apellido:</label>
+                            <input asp-for="LastName" class="form-control">
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label text-muted small">Email:</label>
+                            <input asp-for="Email" class="form-control">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label text-muted small">UserName:</label>
+                            <input asp-for="UserName" class="form-control">
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label text-muted small">Password:</label>
+                            <input asp-for="Password" type="password" class="form-control">
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label text-muted small">Confirm password:</label>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control">
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-muted small">Rol</label>
+                            <select asp-for="Role" class="form-select form-control-modern">
+                                <option value="">Selecciona una opción</option>
+                                <option value="1">Administrador</option>
+                                <option value="2">Dirigente</option>
+                            </select>
+                            <span asp-validation-for="Role" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-check form-switch mb-4">
+                            <input asp-for="Status" class="form-check-input" type="checkbox" checked>
+                            <label class="form-check-label">Usuario activo</label>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-soft-orange"><i class="bi bi-arrow-left-short"></i> Volver atrás</a>
+                            <button type="submit" class="btn btn-blue"><i class="bi bi-floppy2"></i> Guardar</button>
+                        </div>
+
+                    </form>
                 </div>
-                <div class="mb-3">
-                    <label asp-for="Email" class="form-label">Email:</label>
-                    <input class="form-control" asp-for="Email" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="UserName" class="form-label">UserName:</label>
-                    <input class="form-control" asp-for="UserName" />
-                    <span asp-validation-for="UserName" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Password" class="form-label">Password:</label>
-                    <input class="form-control" asp-for="Password" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="ConfirmPassword" class="form-label">Confirm password:</label>
-                    <input class="form-control" asp-for="ConfirmPassword" />
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                </div>
-                <div class="form-check mb-4">
-                    <input asp-for="Status" type="checkbox" checked />
-                    <label asp-for="Status" class="form-check-label">Activa</label>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Role" class="form-label">Role:</label>
-                    <select asp-for="Role" class="form-select">
-                        <option value="0">Select any option</option>
-                        <option value="1">Admin</option>
-                        <option value="2">Investor</option>
-                    </select>
-                    <span asp-validation-for="Role" class="text-danger"></span>
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-outline-primary float-end"><i class="bi bi-floppy2"></i> Save</button>
-                    <a asp-controller="User" asp-action="Index" class="btn btn-outline-warning float-end me-2"><i class="bi bi-arrow-left-short"></i> Back to list</a>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+

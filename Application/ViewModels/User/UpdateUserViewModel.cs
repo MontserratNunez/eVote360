@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using eVote360.Core.Domain.Common.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace eVote360.Core.Application.ViewModels.User
 {
@@ -30,7 +31,7 @@ namespace eVote360.Core.Application.ViewModels.User
         public string? ConfirmPassword { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "You must enter the valid role of user")]
-        public required int Role { get; set; }
+        public required Role Role { get; set; }
 
         [Required(ErrorMessage = "El estado es requerido")]
         public required bool Status { get; set; }
