@@ -40,6 +40,7 @@ namespace eVote360.Middlewares
             return userViewModel;
         }
 
+
         public bool IsAdmin()
         {
             UserViewModel? userViewModel = _httpContextAccessor.HttpContext?

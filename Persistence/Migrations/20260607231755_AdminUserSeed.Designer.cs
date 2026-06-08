@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eVote360.Infrastructure.Persistence.Contexts;
 
@@ -10,9 +11,11 @@ using eVote360.Infrastructure.Persistence.Contexts;
 namespace eVote360.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(eVote360AppContext))]
-    partial class eVote360AppContextModelSnapshot : ModelSnapshot
+    [Migration("20260607231755_AdminUserSeed")]
+    partial class AdminUserSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,7 +118,7 @@ namespace eVote360.Infrastructure.Persistence.Migrations
                             Email = "Admin@admin.com",
                             LastName = "Admin",
                             Name = "Admin",
-                            Password = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+                            Password = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07d7c9e4b9f7f2b6e6f",
                             Role = 1,
                             Status = true,
                             UserName = "Admin"

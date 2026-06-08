@@ -1,0 +1,84 @@
+﻿@using eVote360.Core.Application.Interfaces
+@using eVote360.Core.Application.ViewModels.User
+@using eVote360.Core.Domain.Common.Enums
+
+@inject IUserSession userSession;
+@{
+    UserViewModel? User = userSession.GetUserSession();
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/Sidebarsite.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/eVote360.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" asp-append-version="true">
+</head>
+<body class="d-flex min-vh-100">
+
+    <div class="offcanvas offcanvas-start bg-dark text-white d-lg-flex flex-column flex-shrink-0 p-3" tabindex="-1" id="sidebar" style="width: 280px;">
+
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">eVote360</h5>
+            <button type="button" class="btn-close btn-close-white d-lg-none d-md-none" data-bs-dismiss="offcanvas"></button>
+            </div>
+
+            <hr>
+            
+            <div class="offcanvas-body d-flex flex-column p-0">
+                <ul class="nav nav-pills flex-column mb-auto">
+
+
+                    @if (User?.Role == Role.ADMIN)
+                    {
+                        @await Html.PartialAsync("Sidebar/_AdminMenu")
+                    }
+
+                    @if (User?.Role == Role.DIRECTOR)
+                    {
+                        @await Html.PartialAsync("Sidebar/_DirectorMenu")
+                    }
+
+                </ul>
+            <p class="ms-2">
+                <a class="nav-item nav-link text-light" asp-area="" asp-controller="Login" asp-action="Logout"><i class="bi bi-door-open"></i> Log out (@User?.UserName)</a>
+                </p>
+            </div>
+        </div>
+
+
+
+
+
+        <div class="d-flex flex-column flex-grow-1  overflow-auto" style="height: 100vh;">
+
+
+            <button class="btn btn-dark d-lg-none m-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
+                ☰
+            </button>
+
+
+            <main class="flex-grow-1 py-3 px-5">
+                @RenderBody()
+            </main>
+
+            <footer class="border-top footer text-muted mt-auto bg-white">
+                <div class="container">
+                    &copy; 2026 - ImportCost
+                </div>
+            </footer>
+
+        </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

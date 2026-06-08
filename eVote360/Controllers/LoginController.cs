@@ -22,6 +22,7 @@ namespace eVote360.Controllers
         }
         public IActionResult Index()
         {
+            Console.WriteLine(PasswordEncryptation.ComputeSha256Hash("123"));
             if (_userSession.HasUser())
             {
                 UserViewModel? userSession = _userSession.GetUserSession();
