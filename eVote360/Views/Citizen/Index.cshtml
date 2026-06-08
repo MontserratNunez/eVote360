@@ -1,0 +1,59 @@
+﻿@model List<eVote360.Core.Application.ViewModels.Citizen.CitizenViewModel>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h2>Mantenimiento de Ciudadanos</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            @if (ViewBag.HasActiveElection)
+            {
+                <div class="alert alert-warning d-inline-block p-2 mb-0">No se pueden modificar ciudadanos mientras exista una elección activa.</div>
+                <button class="btn btn-primary" disabled>Crear ciudadano</button>
+            }
+            else
+            {
+                <a asp-action="Create" class="btn btn-primary">Crear ciudadano</a>
+            }
+        </div>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Correo electrónico</th>
+                <th>Documento</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.LastName</td>
+                    <td>@item.Email</td>
+                    <td>@item.DocumentNumber</td>
+                    <td>@(item.Status ? "Activo" : "Inactivo")</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning @(ViewBag.HasActiveElection ? "disabled" : "")">Editar</a>
+
+                        <form asp-action="ChangeStatus" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('¿Está seguro que desea @(item.Status ? "desactivar" : "activar") este ciudadano?');">
+                            <button type="submit" class="btn btn-sm @(item.Status ? "btn-danger" : "btn-success")" @(ViewBag.HasActiveElection ? "disabled" : "")>
+                                @(item.Status ? "Desactivar" : "Activar")
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

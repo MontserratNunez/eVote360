@@ -1,0 +1,37 @@
+﻿@model eVote360.Core.Application.ViewModels.Citizen.SaveCitizenViewModel
+
+<div class="container">
+    <h2>@(Model.Id == 0 ? "Crear" : "Editar") Ciudadano</h2>
+
+    <form asp-action="@(Model.Id == 0 ? "Create" : "Edit")" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Status" />
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label">Nombre</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="LastName" class="form-label">Apellido</label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Correo electrónico</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="DocumentNumber" class="form-label">Número de documento de identidad</label>
+            <input asp-for="DocumentNumber" class="form-control" />
+            <span asp-validation-for="DocumentNumber" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Guardar cambios</button>
+        <a asp-action="Index" class="btn btn-secondary">Volver atrás</a>
+    </form>
+</div>

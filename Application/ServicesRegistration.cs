@@ -10,6 +10,7 @@ namespace eVote360.Core.Application
         {
             #region Services IOC
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICitizenService, CitizenService>();
             #endregion
         }
 
