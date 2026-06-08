@@ -27,7 +27,15 @@
 
         <div class="mb-3">
             <label asp-for="DocumentNumber" class="form-label">Número de documento de identidad</label>
-            <input asp-for="DocumentNumber" class="form-control" />
+            @if (ViewBag.HasParticipated != null && ViewBag.HasParticipated)
+            {
+                <input asp-for="DocumentNumber" class="form-control" readonly />
+                <small class="text-muted">No se puede modificar porque ya participó en una elección.</small>
+            }
+            else
+            {
+                <input asp-for="DocumentNumber" class="form-control" />
+            }
             <span asp-validation-for="DocumentNumber" class="text-danger"></span>
         </div>
 
