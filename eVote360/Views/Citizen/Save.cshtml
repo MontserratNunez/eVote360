@@ -1,0 +1,82 @@
+﻿@model eVote360.Core.Application.ViewModels.Citizen.SaveCitizenViewModel
+
+@{
+    ViewData["Title"] = (Model.Id == 0 ? "Crear" : "Editar") + " Ciudadano";
+}
+
+
+
+
+
+<div class="container mt-4">
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @ViewBag.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
+
+            <div class="card card-modern shadow-sm">
+
+                <div class="card-header pt-4">
+                    <div class="text-center">
+                        <h4 class="fw-bold mb-1">@(Model.Id == 0 ? "Nuevo" : "Editar") Ciudadano</h4>
+                        <p class="text-muted small m-1">Completa la información del ciudadano</p>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="@(Model.Id == 0 ? "Create" : "Edit")" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="Status" />
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label text-muted small">Nombre:</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LastName" class="form-label text-muted small">Apellido:</label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label text-muted small">Correo electrónico:</label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="DocumentNumber" class="form-label text-muted small">Número de documento de identidad:</label>
+                            @if (ViewBag.HasParticipated != null && ViewBag.HasParticipated)
+                            {
+                                <input asp-for="DocumentNumber" class="form-control" readonly />
+                                <div class="form-text text-warning small mt-1">
+                                    <i class="bi bi-exclamation-triangle-fill"></i> No se puede modificar porque ya participó en una elección.
+                                </div>
+                            }
+                            else
+                            {
+                                <input asp-for="DocumentNumber" class="form-control" />
+                            }
+                            <span asp-validation-for="DocumentNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-soft-orange"><i class="bi bi-arrow-left-short"></i> Volver atrás</a>
+                            <button type="submit" class="btn btn-blue"><i class="bi bi-floppy2"></i> Guardar</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

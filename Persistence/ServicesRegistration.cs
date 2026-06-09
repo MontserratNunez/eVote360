@@ -23,7 +23,9 @@ namespace eVote360.Infrastructure.Persistence
             #region Repositories IOC
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ICitizenRepository, CitizenRepository>();
             services.AddTransient<IPoliticalPartyRepository, PoliticalPartyRepository>();
+            services.AddTransient<IElectivePositionRepository, ElectivePositionRepository>();
             #endregion
         }
     }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eVote360.Infrastructure.Persistence.Contexts;
 
@@ -10,9 +11,11 @@ using eVote360.Infrastructure.Persistence.Contexts;
 namespace eVote360.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(eVote360AppContext))]
-    partial class eVote360AppContextModelSnapshot : ModelSnapshot
+    [Migration("20260608064304_AddCitizen")]
+    partial class AddCitizen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,34 +64,6 @@ namespace eVote360.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Citizens", (string)null);
-                });
-
-            modelBuilder.Entity("eVote360.Core.Domain.Entities.ElectivePosition", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("ElectivePositions", (string)null);
                 });
 
             modelBuilder.Entity("eVote360.Core.Domain.Entities.PoliticalParty", b =>

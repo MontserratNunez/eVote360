@@ -10,6 +10,9 @@ namespace eVote360.Infrastructure.Persistence.Contexts
         public eVote360AppContext(DbContextOptions<eVote360AppContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<PoliticalParty> PoliticalParties { get; set; }
+        public DbSet<Citizen> Citizens { get; set; }
+        public DbSet<ElectivePosition> ElectivePositions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
