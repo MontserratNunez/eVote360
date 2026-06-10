@@ -11,5 +11,7 @@ namespace eVote360.Core.Application.Dtos.User
         public required string UserName { get; set; }
         public required Role Role { get; set; }
         public required bool Status { get; set; }
+
+        public int? PoliticalPartyId { get; set; }
     }
 }

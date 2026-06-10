@@ -1,0 +1,82 @@
+﻿@model List<eVote360.Core.Application.ViewModels.CandidatePositionAssignment.CandidatePositionAssignmentViewModel>
+
+@{
+    ViewData["Title"] = "Candidate Position Assignments";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Candidate Position Assignments</h2>
+
+        <a asp-controller="CandidatePositionAssignment" asp-action="Create" class="btn btn-primary">
+            New Assignment
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">
+            No candidate position assignments have been registered yet.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Candidate</th>
+                            <th>Candidate Party</th>
+                            <th>Elective Position</th>
+                            <th>Assignment Type</th>
+                            <th style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.CandidateFullName</td>
+                                <td>@item.CandidatePoliticalPartyName</td>
+                                <td>@item.ElectivePositionName</td>
+                                <td>
+                                    @if (item.IsAlliedCandidate)
+                                    {
+                                        <span class="badge bg-warning text-dark">Allied Candidate</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Own Candidate</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-controller="CandidatePositionAssignment"
+                                       asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-danger btn-sm">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

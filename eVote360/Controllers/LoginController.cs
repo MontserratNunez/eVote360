@@ -87,7 +87,8 @@ namespace eVote360.Controllers
                 Name = userDto.Name,
                 Role = userDto.Role,
                 UserName = userDto.UserName,
-                Status = userDto.Status
+                Status = userDto.Status,
+                PoliticalPartyId = userDto.PoliticalPartyId
             };
 
             HttpContext.Session.Set<UserViewModel>("User", userVm);

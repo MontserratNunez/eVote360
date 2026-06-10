@@ -65,7 +65,8 @@ namespace eVote360.Core.Application.Services
                     Name = user.Name,
                     Role = user.Role,
                     UserName = user.UserName,
-                    Status = user.Status
+                    Status = user.Status,
+                    PoliticalPartyId = user.PoliticalPartyId
                 }
             };
         }
@@ -597,7 +598,9 @@ namespace eVote360.Core.Application.Services
 
         private async Task<bool> HasPoliticalAssignment(int userId)
         {
-            return false;
+            var user = await _userRepository.GetById(userId);
+
+            return user != null && user.PoliticalPartyId.HasValue;
         }
 
 

@@ -8,12 +8,7 @@ namespace eVote360.Core.Application
     {
         public static void AddApplicationLayerIoc(this IServiceCollection services)
         {
-            #region Services IOC
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ICitizenService, CitizenService>();
-            services.AddTransient<IPoliticalPartyService, PoliticalPartyService>();
-            services.AddTransient<IElectivePositionService, ElectivePositionService>();
-            #endregion
+            services.AddTransient<ICandidatePositionAssignmentService, CandidatePositionAssignmentService>();
         }
 
     }

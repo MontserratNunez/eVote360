@@ -1,0 +1,62 @@
+﻿@model eVote360.Core.Application.ViewModels.CandidatePositionAssignment.CreateCandidatePositionAssignmentViewModel
+
+@{
+    ViewData["Title"] = "Create Candidate Position Assignment";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Create Candidate Position Assignment</h4>
+        </div>
+
+        <div class="card-body">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <div asp-validation-summary="All"></div>
+                </div>
+            }
+
+            <form asp-controller="CandidatePositionAssignment" asp-action="Create" method="post">
+                <input type="hidden" asp-for="PoliticalPartyId" />
+
+                <div class="mb-3">
+                    <label asp-for="CandidateId" class="form-label">Candidate</label>
+                    <select asp-for="CandidateId" class="form-select">
+                        <option value="0">-- Select a candidate --</option>
+
+                        @foreach (var candidate in Model.Candidates)
+                        {
+                            <option value="@candidate.Id">@candidate.DisplayName</option>
+                        }
+                    </select>
+                    <span asp-validation-for="CandidateId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ElectivePositionId" class="form-label">Elective Position</label>
+                    <select asp-for="ElectivePositionId" class="form-select">
+                        <option value="0">-- Select an elective position --</option>
+
+                        @foreach (var position in Model.ElectivePositions)
+                        {
+                            <option value="@position.Id">@position.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="ElectivePositionId" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-controller="CandidatePositionAssignment" asp-action="Index" class="btn btn-secondary">
+                        Back
+                    </a>
+
+                    <button type="submit" class="btn btn-primary">
+                        Save Assignment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
