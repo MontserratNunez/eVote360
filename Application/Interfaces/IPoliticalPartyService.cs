@@ -11,6 +11,8 @@ namespace eVote360.Core.Application.Interfaces
         Task UpdateLogo(int id, string logoPath);
         Task<Result> UpdateAsync(UpdatePoliticalPartyDto dto);
         Task<Result<PoliticalPartyDto?>> GetById(int id);
+
+        Task<bool> HasActiveElection();
         Task<Result> ActivateAsync(int id);
         Task<Result> DeactivateAsync(int id);
     }

@@ -12,10 +12,14 @@ namespace eVote360.Core.Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPoliticalLeaderAssignmentRepository _assignmentRepository;
+        private readonly IElectionRepository _electionRepository;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IPoliticalLeaderAssignmentRepository assignmentRepository, IElectionRepository electionRepository)
         {
             _userRepository = userRepository;
+            _assignmentRepository = assignmentRepository;
+            _electionRepository = electionRepository;
         }
         public async Task<Result<UserDto>> LoginAsync(LoginDto dto)
         {
@@ -590,14 +594,16 @@ namespace eVote360.Core.Application.Services
             return await _userRepository.GetAllQuery().AnyAsync(u => u.Email.ToLower() == email.ToLower());
         }
 
-        private async Task<bool> HasActiveElection()
+        public async Task<bool> HasActiveElection()
         {
-            return false;
+            bool active = await _electionRepository.GetAllQuery().AnyAsync(e => e.Status == ElectionStatus.ACTIVE);
+
+            return active;
         }
 
         private async Task<bool> HasPoliticalAssignment(int userId)
         {
-            return false;
+            return await _assignmentRepository.GetAllQuery().AnyAsync(a => a.UserId == userId);
         }
 
 

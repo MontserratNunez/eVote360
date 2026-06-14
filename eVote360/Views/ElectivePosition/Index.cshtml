@@ -12,18 +12,18 @@
             <h2 class="page-title">Puestos Electivos</h2>
             <p class="page-subtitle">Listado de puestos electivos registrados</p>
         </div>
-            @if (ViewBag.HasActiveElection)
-            {
-                <div class="alert alert-warning d-inline-block p-2 mb-0">No se pueden modificar puestos electivos mientras exista una elección activa.</div>
-                <button class="btn btn-blue shadow-sm" disabled><i class="bi bi-file-earmark-plus"></i> Crear puesto electivo</button>
-            }
-            else
+            @if(!ViewBag.HasActiveElection)
             {
             <a class="btn btn-blue shadow-sm" asp-action="Create">
                 <i class="bi bi-file-earmark-plus"></i> Crear puesto electivo
             </a>
             }
     </div>
+
+    @if (ViewBag.HasActiveElection)
+    {
+        <div class="alert alert-warning d-inline-block p-2">No se pueden modificar puestos electivos mientras exista una elección activa.</div>
+    }
 
     @if (TempData["Success"] != null)
     {
@@ -60,7 +60,10 @@
                                 <th>Nombre</th>
                                 <th>Descripción</th>
                                 <th>Estado</th>
-                                <th class="text-end">Acciones</th>
+                                @if (!ViewBag.HasActiveElection)
+                                {
+                                    <th class="text-end">Acciones</th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
@@ -79,27 +82,28 @@
                                             <span class="badge rounded-pill badge-inactive badge-status">Inactivo</span>
                                         }
                                     </td>
-                                    <td class="text-end">
-                                        @if (!ViewBag.HasActiveElection)
-                                        {
+                                    @if (!ViewBag.HasActiveElection)
+                                    {
+                                        <td class="text-end">
                                             <a class="btn btn-sm btn-orange me-1" asp-action="Edit" asp-route-id="@item.Id">
                                                 <i class="bi bi-pencil-square"></i> Editar
                                             </a>
-                                        
+
                                             @if (!item.Status)
                                             {
-                                                <a class="btn btn-sm btn-success" asp-action="Activate" asp-route-id="@item.Id">
+                                                <a class="btn btn-sm btn-success" asp-action="Confirm" asp-route-id="@item.Id" asp-route-activate="true">
                                                     <i class="bi bi-check-circle"></i> Activar
                                                 </a>
                                             }
                                             else
                                             {
-                                                <a class="btn btn-sm btn-danger" asp-action="Deactivate" asp-route-id="@item.Id">
+                                                <a class="btn btn-sm btn-danger" asp-action="Confirm" asp-route-id="@item.Id" asp-route-activate="false">
                                                     <i class="bi bi-ban"></i> Desactivar
                                                 </a>
                                             }
-                                        }
-                                    </td>
+
+                                        </td>
+                                    }
                                 </tr>
                             }
                         </tbody>

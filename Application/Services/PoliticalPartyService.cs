@@ -2,6 +2,7 @@
 using eVote360.Core.Application.Dtos.PoliticalParty;
 using eVote360.Core.Application.Dtos.User;
 using eVote360.Core.Application.Interfaces;
+using eVote360.Core.Domain.Common.Enums;
 using eVote360.Core.Domain.Entities;
 using eVote360.Core.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,19 @@ namespace eVote360.Core.Application.Services
     public class PoliticalPartyService : IPoliticalPartyService
     {
         private readonly IPoliticalPartyRepository _politicalPartyRepository;
+        private readonly IPoliticalLeaderAssignmentRepository _assignmentRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IElectionRepository _electionRepository;
 
-        public PoliticalPartyService(IPoliticalPartyRepository politicalPartyRepository)
+
+        public PoliticalPartyService(IPoliticalPartyRepository politicalPartyRepository, 
+            IPoliticalLeaderAssignmentRepository leaderRepository, 
+            IUserRepository userRepository, IElectionRepository electionRepository)
         {
             _politicalPartyRepository = politicalPartyRepository;
+            _assignmentRepository = leaderRepository;
+            _userRepository = userRepository;
+            _electionRepository = electionRepository;
         }
 
         public async Task<Result<List<PoliticalPartyDto>>> GetAllAsync()
@@ -384,9 +394,11 @@ namespace eVote360.Core.Application.Services
 
 
 
-        private async Task<bool> HasActiveElection()
+        public async Task<bool> HasActiveElection()
         {
-            return false;
+            bool active = await _electionRepository.GetAllQuery().AnyAsync(e => e.Status == ElectionStatus.ACTIVE);
+
+            return active;
         }
 
         private async Task<bool> HasElectionParticipation(int partyId)
@@ -397,7 +409,11 @@ namespace eVote360.Core.Application.Services
 
         private async Task<bool> HasActiveDirector(int partyId)
         {
-            return false;
+            return await _assignmentRepository.GetAllQuery()
+                .Include(a => a.User)
+                .AnyAsync(a =>
+                    a.PoliticalPartyId == partyId &&
+                    a.User.Status);
         }
 
 

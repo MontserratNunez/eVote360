@@ -2,6 +2,7 @@ using eVote360.Core.Application;
 using eVote360.Core.Application.Interfaces;
 using eVote360.Infrastructure.Persistence;
 using eVote360.Middlewares;
+using eVote360.Infraestructure.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +15,12 @@ builder.Services.AddSession(opt =>
     opt.Cookie.HttpOnly = true;
 });
 
+builder.Services.AddInfraestructureLayerIoc();
 builder.Services.AddPersistenceLayerIoc(builder.Configuration);
 builder.Services.AddApplicationLayerIoc();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IUserSession, UserSession>();
-
+builder.Services.AddScoped<ICitizenSession, CitizenSessionMiddleware>();
 
 var app = builder.Build();
 
@@ -43,7 +45,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Login}/{action=Index}/{id?}")
+    pattern: "{controller=Vote}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 

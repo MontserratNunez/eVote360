@@ -12,5 +12,7 @@ namespace eVote360.Core.Domain.Entities
         public required string Password { get; set; }
         public required Role Role { get; set; }
         public required bool Status { get; set; }
+
+        public PoliticalLeaderAssignment? PoliticalLeaderAssignment { get; set; }
     }
 }

@@ -1,0 +1,57 @@
+﻿@{
+    var activeTab = ViewData["ActiveTab"] as string ?? "All";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title">Alianzas Políticas</h2>
+        <p class="page-subtitle">Gestión de convenios, solicitudes y coaliciones partidarias</p>
+    </div>
+    @if (!ViewBag.HasActiveElection)
+    {
+        <a class="btn btn-blue shadow-sm" asp-action="Create">
+            <i class="bi bi-file-earmark-plus"></i> Crear solicitud de alianza
+        </a>
+    }
+</div>
+
+@if (ViewBag.HasActiveElection)
+{
+    <div class="alert alert-warning d-inline-block p-2">
+        No se puede crear una solicitud de alianza mientras exista una elección activa.
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success border-0 alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger border-0 alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<ul class="nav nav-tabs mb-3 d-flex w-100">
+    <li class="nav-item">
+        <a class="nav-link @(activeTab == "All" ? "active fw-bold border-bottom-0 shadow-sm" : "text-muted")" asp-action="All">
+            <i class="bi bi-send me-2"></i>Solicitudes realizadas
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(activeTab == "Current" ? "active fw-bold border-bottom-0 shadow-sm" : "text-muted")" asp-action="Current">
+            <i class="bi bi-shield-check me-2"></i>Alianzas vigentes
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(activeTab == "Pending" ? "active fw-bold border-bottom-0 shadow-sm" : "text-muted")" asp-action="Pending">
+            <i class="bi bi-envelope-exclamation me-2"></i>Solicitudes pendientes
+        </a>
+    </li>
+</ul>

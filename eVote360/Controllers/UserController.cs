@@ -1,6 +1,7 @@
 using eVote360.Attributes;
 using eVote360.Core.Application.Dtos.User;
 using eVote360.Core.Application.Interfaces;
+using eVote360.Core.Application.Services;
 using eVote360.Core.Application.ViewModels.User;
 using eVote360.Helpers;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,8 @@ namespace eVote360.Controllers
                   Role = s.Role,
                   Status = s.Status
               }).ToList();
+
+            ViewBag.HasActiveElection = await _userService.HasActiveElection();
 
             return View(listEntityVms);
         }

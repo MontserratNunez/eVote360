@@ -11,9 +11,16 @@
             <h2 class="page-title">Partidos políticos</h2>
             <p class="page-subtitle">Listado de partidos políticos registrados</p>
         </div>
-
-        <a class="btn btn-blue shadow-sm" asp-action="Create"><i class="bi bi-file-earmark-plus"></i> Crear partido político</a>
+        @if (!ViewBag.HasActiveElection)
+        {
+            <a class="btn btn-blue shadow-sm" asp-action="Create"><i class="bi bi-file-earmark-plus"></i> Crear partido político</a>
+        }
     </div>
+
+    @if (ViewBag.HasActiveElection)
+    {
+        <div class="alert alert-warning d-inline-block p-2">No se pueden modificar partidos políticos mientras exista una elección activa.</div>
+    }
 
     @if (TempData["Success"] != null)
     {
@@ -54,7 +61,10 @@
                                 <th>Nombre</th>
                                 <th>Descripción</th>
                                 <th>Estado</th>
-                                <th class="text-end">Acciones</th>
+                                @if (!ViewBag.HasActiveElection)
+                                {
+                                    <th class="text-end">Acciones</th>
+                                }
                             </tr>
                         </thead>
 
@@ -63,7 +73,7 @@
                             {
                                 <tr>
                                     <td><img src="@item.LogoPath" class="rounded img-table responsive-image" alt="@item.Name"></td>
-                                    <td>@item.Acronym</td>
+                                    <td class="fw-bold">@item.Acronym</td>
                                     <td>@item.Name</td>
                                     <td class="text-muted">@item.Description</td>
 
@@ -78,21 +88,24 @@
                                         }
                                     </td>
 
-                                    <td class="text-end">
+                                    @if (!ViewBag.HasActiveElection)
+                                    {
+                                        <td class="text-end">
 
-                                        <a class="btn btn-sm btn-orange me-1" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i> Editar</a>
+                                            <a class="btn btn-sm btn-orange me-1" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i> Editar</a>
 
-                                        @if (!item.Status)
-                                        {
-                                            <a class="btn btn-sm btn-success" asp-action="Activate" asp-route-id="@item.Id"><i class="bi bi-check-circle"></i> Activar</a>
-                                        }
+                                            @if (!item.Status)
+                                            {
+                                                <a class="btn btn-sm btn-success" asp-action="Activate" asp-route-id="@item.Id"><i class="bi bi-check-circle"></i> Activar</a>
+                                            }
 
-                                        @if (item.Status)
-                                        {
-                                            <a class="btn btn-sm btn-danger" asp-action="Deactivate" asp-route-id="@item.Id"><i class="bi bi-ban"></i> Desactivar</a>
-                                        }
+                                            @if (item.Status)
+                                            {
+                                                <a class="btn btn-sm btn-danger" asp-action="Deactivate" asp-route-id="@item.Id"><i class="bi bi-ban"></i> Desactivar</a>
+                                            }
 
-                                    </td>
+                                        </td>
+                                    }
                                 </tr>
                             }
                         </tbody>

@@ -2,9 +2,11 @@
 using eVote360.Core.Application.Common.Results;
 using eVote360.Core.Application.Dtos.PoliticalParty;
 using eVote360.Core.Application.Interfaces;
+using eVote360.Core.Application.Services;
 using eVote360.Core.Application.ViewModels.PoliticalParty;
 using eVote360.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace eVote360.Controllers
 {
@@ -33,6 +35,8 @@ namespace eVote360.Controllers
                     Status = p.Status
                 }).ToList();
 
+            ViewBag.HasActiveElection = await _politicalPartyService.HasActiveElection();
+
             return View(vm);
         }
 
@@ -59,7 +63,7 @@ namespace eVote360.Controllers
 
             if (vm.Logo == null || !IsValidImage(vm.Logo))
             {
-                ViewBag.ErrorMessage = "El logo del partido debe ser una imagen válida.";
+                ModelState.AddModelError("Logo", "El logo del partido debe ser una imagen válida.");
                 return View(vm);
             }
 
@@ -132,7 +136,7 @@ namespace eVote360.Controllers
             {
                 if (!IsValidImage(vm.Logo))
                 {
-                    ViewBag.ErrorMessage = "El logo del partido debe ser una imagen válida.";
+                    ModelState.AddModelError("Logo", "El logo del partido debe ser una imagen válida.");
                     return View(vm);
                 }
 

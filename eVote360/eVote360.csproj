@@ -4,6 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>3dc2932f-19ff-4b11-9358-e9c1f642d4fd</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\eVote360.Core.Application.csproj" />
+    <ProjectReference Include="..\eVote.Infraestructure.Shared\eVote360.Infraestructure.Shared.csproj" />
     <ProjectReference Include="..\Persistence\eVote360.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 

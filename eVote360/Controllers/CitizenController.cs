@@ -100,7 +100,7 @@ namespace eVote360.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            SaveCitizenDto vm = new()
+            SaveCitizenViewModel vm = new()
             {
                 Id = result.Data.Id,
                 Name = result.Data.Name,

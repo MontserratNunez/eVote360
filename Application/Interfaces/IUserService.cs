@@ -10,7 +10,7 @@ namespace eVote360.Core.Application.Interfaces
         Task<Result<List<UserDto>>> GetAll();
         Task<Result<UserDto?>> GetById(int id);
         Task<Result<UserDto>> LoginAsync(LoginDto dto);
-
+        Task<bool> HasActiveElection();
         Task<Result> ActivateAsync(int id);
 
         Task<Result> DeactivateAsync(int id, int currentUserId);

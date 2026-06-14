@@ -1,0 +1,59 @@
+﻿@using eVote360.Core.Application.ViewModels.Vote
+
+@model VoteViewModel
+@{
+    ViewData["Title"] = "Validación de Votante";
+    Layout = "_LayoutAnonymous";
+}
+
+<div class="container mt-5">
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger border-0 alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5">
+            <div class="card card-modern shadow-sm border-0 mt-4">
+                <div class="card-header pt-5 pb-3 bg-transparent border-0 text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-card-text text-primary fs-1"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">Verificación de Identidad</h3>
+                    <p class="text-muted small px-3">Ingrese su número de cédula.</p>
+                </div>
+
+                <div class="card-body p-4">
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    <form asp-action="Index" method="post">
+
+                        <div class="mb-4">
+                            <label asp-for="DocumentNumber" class="form-label text-muted small fw-bold">Número de Documento / Cédula:</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-person-vcard"></i></span>
+                                <input asp-for="DocumentNumber" class="form-control form-control-modern" placeholder="Ej: 001-0000000-0" autocomplete="off" autofocus />
+                            </div>
+                            <span asp-validation-for="DocumentNumber" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-blue py-2 shadow-sm">
+                                Votar
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

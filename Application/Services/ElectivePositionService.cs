@@ -1,7 +1,7 @@
 ﻿using eVote360.Core.Application.Common.Results;
 using eVote360.Core.Application.Dtos.ElectivePosition;
 using eVote360.Core.Application.Interfaces;
-using eVote360.Core.Application.ViewModels.Citizen;
+using eVote360.Core.Domain.Common.Enums;
 using eVote360.Core.Domain.Entities;
 using eVote360.Core.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +10,13 @@ namespace eVote360.Core.Application.Services
 {
     public class ElectivePositionService : IElectivePositionService
     {
-        public readonly IElectivePositionRepository _electivePositionRepository;
+        private readonly IElectivePositionRepository _electivePositionRepository;
+        private readonly IElectionRepository _electionRepository;
 
-        public ElectivePositionService(IElectivePositionRepository electivePositionRepository)
+        public ElectivePositionService(IElectivePositionRepository electivePositionRepository, IElectionRepository electionRepository)
         {
             _electivePositionRepository = electivePositionRepository;
+            _electionRepository = electionRepository;
         }
 
         public async Task<Result<List<ElectivePositionDto>>> GetAllAsync()
@@ -354,7 +356,9 @@ namespace eVote360.Core.Application.Services
 
         public async Task<bool> HasActiveElection()
         {
-            return false;
+            bool active = await _electionRepository.GetAllQuery().AnyAsync(e => e.Status == ElectionStatus.ACTIVE);
+
+            return active;
         }
 
 

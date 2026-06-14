@@ -3,9 +3,6 @@ using eVote360.Core.Application.Helpers;
 using eVote360.Core.Application.Interfaces;
 using eVote360.Core.Application.ViewModels.User;
 using eVote360.Core.Domain.Common.Enums;
-using eVote360.Helpers;
-using eVote360.Middlewares;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eVote360.Controllers
@@ -22,7 +19,6 @@ namespace eVote360.Controllers
         }
         public IActionResult Index()
         {
-            Console.WriteLine(PasswordEncryptation.ComputeSha256Hash("123"));
             if (_userSession.HasUser())
             {
                 UserViewModel? userSession = _userSession.GetUserSession();

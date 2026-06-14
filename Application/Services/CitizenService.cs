@@ -2,6 +2,7 @@
 using eVote360.Core.Application.Dtos.Citizen;
 using eVote360.Core.Application.Interfaces;
 using eVote360.Core.Application.ViewModels.Citizen;
+using eVote360.Core.Domain.Common.Enums;
 using eVote360.Core.Domain.Entities;
 using eVote360.Core.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,12 @@ namespace eVote360.Core.Application.Services
     public class CitizenService : ICitizenService
     {
         private readonly ICitizenRepository _citizenRepository;
+        private readonly IElectionRepository _electionRepository;
 
-        public CitizenService(ICitizenRepository citizenRepository)
+        public CitizenService(ICitizenRepository citizenRepository, IElectionRepository electionRepository)
         {
             _citizenRepository = citizenRepository;
+            _electionRepository = electionRepository;
         }
 
         public async Task<Result<List<CitizenDto>>> GetAllAsync()
@@ -72,9 +75,17 @@ namespace eVote360.Core.Application.Services
             if (string.IsNullOrWhiteSpace(dto.DocumentNumber))
                 return new Result { IsSuccess = false, Message = "El número de documento de identidad es requerido." };
 
-            string email = dto.Email.Trim().ToLower();
-            string documentNumber = dto.DocumentNumber.Trim();
+            string documentNumber = FormatToOfficialDocument(dto.DocumentNumber);
 
+            string rawDigits = new string(documentNumber.Where(char.IsDigit).ToArray());
+            if (rawDigits.Length != 11)
+            {
+                return new Result { IsSuccess = false, Message = "El número de documento de identidad debe contener exactamente 11 dígitos." };
+            }
+
+
+            string email = dto.Email.Trim().ToLower();
+            
             if (await _citizenRepository.GetAllQuery().AnyAsync(c => c.Email.ToLower() == email))
             {
                 return new Result
@@ -120,6 +131,21 @@ namespace eVote360.Core.Application.Services
                 IsSuccess = true,
                 Message = "Ciudadano creado correctamente."
             };
+        }
+
+        private string FormatToOfficialDocument(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+
+            string digits = new string(input.Where(char.IsDigit).ToArray());
+
+            if (digits.Length != 11) return input.Trim();
+
+            string area = digits.Substring(0, 3);
+            string sequence = digits.Substring(3, 7);
+            string verifier = digits.Substring(10, 1);
+
+            return $"{area}-{sequence}-{verifier}";
         }
 
         public async Task<Result> UpdateAsync(SaveCitizenDto dto)
@@ -382,7 +408,9 @@ namespace eVote360.Core.Application.Services
 
         public async Task<bool> HasActiveElection()
         {
-            return false;
+            bool active = await _electionRepository.GetAllQuery().AnyAsync(e => e.Status == ElectionStatus.ACTIVE);
+
+            return active;
         }
 
         public async Task<bool> HasCitizenParticipated(int citizenId)
