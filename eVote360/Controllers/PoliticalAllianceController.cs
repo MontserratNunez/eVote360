@@ -99,6 +99,8 @@ namespace eVote360.Controllers
             }).ToList();
 
             ViewBag.HasActiveElection = await _allianceService.HasActiveElection();
+            var pending = await _allianceService.GetPendingCountAsync(user.Id);
+            ViewBag.PendingCount = pending.Data;
 
             return View(vm);
         }
@@ -128,6 +130,8 @@ namespace eVote360.Controllers
             }).ToList();
 
             ViewBag.HasActiveElection = await _allianceService.HasActiveElection();
+            var pending = await _allianceService.GetPendingCountAsync(user.Id);
+            ViewBag.PendingCount = pending.Data;
 
             return View(vm);
         }
@@ -158,6 +162,7 @@ namespace eVote360.Controllers
             }).ToList();
 
             ViewBag.HasActiveElection = await _allianceService.HasActiveElection();
+            ViewBag.PendingCount = result.Data.Count;
 
             return View(vm);
         }

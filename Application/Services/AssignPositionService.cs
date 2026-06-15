@@ -53,49 +53,6 @@ namespace eVote360.Core.Application.Services
             _voteRepository = voteRepository;
         }
 
-        /*
-        public async Task<Result<List<AssignPositionDto>>> GetAllAsync(int userId)
-        {
-            var result = new Result<List<AssignPositionDto>>();
-
-            var assignment = await _leaderAssignmentRepository
-                .GetAllQuery()
-                .FirstOrDefaultAsync(a => a.UserId == userId);
-
-            if (assignment == null)
-            {
-                result.IsSuccess = false;
-                result.Message = "No tiene un partido político asignado.";
-                return result;
-            }
-
-            int myPartyId = assignment.PoliticalPartyId;
-
-            var assignPositions = await _assignPositionRepository
-                .GetAllQuery()
-                .Include(a => a.Candidate)
-                    .ThenInclude(c => c.PoliticalParty)
-                .Include(a => a.ElectivePosition)
-                .Where(a => a.PoliticalPartyId == myPartyId)
-                .ToListAsync();
-
-            result.IsSuccess = true;
-
-            result.Data = assignPositions.Select(a => new AssignPositionDto
-            {
-                Id = a.Id,
-                CandidateName = a.Candidate.Name,
-                CandidateLastName = a.Candidate.LastName,
-                CandidatePartyName = $"{a.Candidate.PoliticalParty.Name} ({a.Candidate.PoliticalParty.Acronym})",
-                PositionName = a.ElectivePosition.Name,
-                CandidateType = a.IsAlliance ? "Aliado" : "Propio",
-                IsAlliance = a.IsAlliance,
-                IsEditable = a.ElectionId != null ? false : true
-            }).ToList();
-
-            return result;
-        }*/
-
         public async Task<Result<AssignPositionListDto>> GetAllAsync(int userId)
         {
             var result = new Result<AssignPositionListDto>();

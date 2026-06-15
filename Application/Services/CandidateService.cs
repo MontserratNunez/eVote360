@@ -1,7 +1,6 @@
 ﻿using eVote360.Core.Application.Common.Results;
 using eVote360.Core.Application.Dtos.Candidate;
 using eVote360.Core.Application.Interfaces;
-using eVote360.Core.Application.ViewModels.Candidate;
 using eVote360.Core.Domain.Common.Enums;
 using eVote360.Core.Domain.Entities;
 using eVote360.Core.Domain.Interfaces;
@@ -16,11 +15,13 @@ namespace eVote360.Core.Application.Services
         private readonly IUserRepository _userRepository;
         private readonly IPoliticalPartyRepository _politicalPartyRepository;
         private readonly IElectionRepository _electionRepository;
+        private readonly IAssignPositionRepository _assignPositionRepository;
 
         public CandidateService(ICandidateRepository candidateRepository,
             IPoliticalLeaderAssignmentRepository assignmentRepository, IUserRepository userRepository,
             IPoliticalPartyRepository politicalPartyRepository, 
-            IElectionRepository electionRepository
+            IElectionRepository electionRepository,
+            IAssignPositionRepository assignPositionRepository
             )
         {
             _candidateRepository = candidateRepository;
@@ -28,6 +29,7 @@ namespace eVote360.Core.Application.Services
             _userRepository = userRepository;
             _politicalPartyRepository = politicalPartyRepository;
             _electionRepository = electionRepository;
+            _assignPositionRepository = assignPositionRepository;
         }
 
         public async Task<Result<List<CandidateDto>>> GetAllAsync(int userId)
@@ -548,12 +550,12 @@ namespace eVote360.Core.Application.Services
 
         public async Task<bool> HasCandidateParticipated(int candidateId)
         {
-            return false;
+            return await _assignPositionRepository.GetAllQuery().AnyAsync(a => a.CandidateId == candidateId && a.ElectionId != null);
         }
 
         private async Task<bool> HasActivePositionAssignment(int candidateId)
         {
-            return false;
+            return await _assignPositionRepository.GetAllQuery().AnyAsync(a => a.CandidateId == candidateId && a.ElectionId == null);
         }
     }
 }

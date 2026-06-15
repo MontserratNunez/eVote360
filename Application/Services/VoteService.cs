@@ -169,26 +169,11 @@ namespace eVote360.Core.Application.Services
                 return new Result { IsSuccess = false, Message = "El ciudadano no existe." };
             }
 
-            /*
-            if (!extractedText.Contains(citizen.DocumentNumber))
-            {
-                return new Result
-                {
-                    IsSuccess = false,
-                    Message = "Los datos extraídos de la foto no coinciden con los datos previamente ingresados por el elector."
-                };
-            }
-            */
-
-            Console.WriteLine(extractedText);
 
             string cleanOcrText = new string(extractedText.Where(char.IsDigit).ToArray());
 
             string cleanDbDocument = new string(citizen.DocumentNumber.Where(char.IsDigit).ToArray());
 
-            Console.WriteLine(cleanOcrText);
-
-            Console.WriteLine(cleanDbDocument);
 
             if (!cleanOcrText.Contains(cleanDbDocument))
             {
@@ -315,7 +300,7 @@ namespace eVote360.Core.Application.Services
             };
         }
 
-        public async Task<Result<List<AvailablePositionsDto>>> GetAvailablePositionsAsync(Dictionary<int, int?> selectedVotes)
+        public async Task<Result<List<AvailablePositionsDto>>> GetAvailablePositionsAsync(Dictionary<int, int?> selectedVotes, int electionId)
         {
             var result = new Result<List<AvailablePositionsDto>>();
 
@@ -326,6 +311,7 @@ namespace eVote360.Core.Application.Services
                     .ToListAsync();
 
                 var allAssignments = await _assignPositionRepository.GetAllQuery()
+                    .Where(p => p.ElectionId == electionId)
                     .ToListAsync();
 
                 var positionsDtoList = new List<AvailablePositionsDto>();
@@ -367,7 +353,7 @@ namespace eVote360.Core.Application.Services
             return result;
         }
 
-        public async Task<Result<CandidatesDto>> GetCandidatesByPositionAsync(int positionId)
+        public async Task<Result<CandidatesDto>> GetCandidatesByPositionAsync(int positionId, int electionId)
         {
             var result = new Result<CandidatesDto>();
 
@@ -384,7 +370,7 @@ namespace eVote360.Core.Application.Services
                 var assignments = await _assignPositionRepository.GetAllQuery()
                     .Include(a => a.Candidate)
                     .Include(a => a.PoliticalParty)
-                    .Where(a => a.ElectivePositionId == positionId && a.Candidate.Status == true)
+                    .Where(a => a.ElectivePositionId == positionId && a.Candidate.Status == true && a.ElectionId == electionId)
                     .ToListAsync();
 
                 var options = assignments.Select(a => new CandidateOptionDto
@@ -430,7 +416,7 @@ namespace eVote360.Core.Application.Services
             }
 
             var alreadyVoted = await _voteRepository.GetAllQuery()
-                .AnyAsync(ce => ce.CitizenId == dto.CitizenId && ce.ElectionId == dto.ElectionId /*  && ce.HasVoted == true*/);
+                .AnyAsync(ce => ce.CitizenId == dto.CitizenId && ce.ElectionId == dto.ElectionId);
 
             if (alreadyVoted)
             {

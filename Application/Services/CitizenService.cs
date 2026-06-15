@@ -13,11 +13,13 @@ namespace eVote360.Core.Application.Services
     {
         private readonly ICitizenRepository _citizenRepository;
         private readonly IElectionRepository _electionRepository;
+        private readonly IVoteRepository _voteRepository;
 
-        public CitizenService(ICitizenRepository citizenRepository, IElectionRepository electionRepository)
+        public CitizenService(ICitizenRepository citizenRepository, IElectionRepository electionRepository, IVoteRepository voteRepository)
         {
             _citizenRepository = citizenRepository;
             _electionRepository = electionRepository;
+            _voteRepository = voteRepository;
         }
 
         public async Task<Result<List<CitizenDto>>> GetAllAsync()
@@ -415,7 +417,7 @@ namespace eVote360.Core.Application.Services
 
         public async Task<bool> HasCitizenParticipated(int citizenId)
         {
-            return false;
+            return await _voteRepository.GetAllQuery().AnyAsync(v => v.CitizenId == citizenId);
         }
     }
 }

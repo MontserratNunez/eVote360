@@ -1,11 +1,11 @@
 ﻿using eVote360.Core.Application.Common.Results;
 using eVote360.Core.Application.Dtos.PoliticalParty;
-using eVote360.Core.Application.Dtos.User;
 using eVote360.Core.Application.Interfaces;
 using eVote360.Core.Domain.Common.Enums;
 using eVote360.Core.Domain.Entities;
 using eVote360.Core.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace eVote360.Core.Application.Services
 {
@@ -15,16 +15,24 @@ namespace eVote360.Core.Application.Services
         private readonly IPoliticalLeaderAssignmentRepository _assignmentRepository;
         private readonly IUserRepository _userRepository;
         private readonly IElectionRepository _electionRepository;
+        private readonly IAssignPositionRepository _assignPositionRepository;
+        private readonly ICandidateRepository _candidateRepository;
 
 
         public PoliticalPartyService(IPoliticalPartyRepository politicalPartyRepository, 
             IPoliticalLeaderAssignmentRepository leaderRepository, 
-            IUserRepository userRepository, IElectionRepository electionRepository)
+            IUserRepository userRepository, 
+            IElectionRepository electionRepository,
+            IAssignPositionRepository assignPositionRepository,
+            ICandidateRepository candidateRepository
+            )
         {
             _politicalPartyRepository = politicalPartyRepository;
             _assignmentRepository = leaderRepository;
             _userRepository = userRepository;
             _electionRepository = electionRepository;
+            _assignPositionRepository = assignPositionRepository;
+            _candidateRepository = candidateRepository;
         }
 
         public async Task<Result<List<PoliticalPartyDto>>> GetAllAsync()
@@ -180,6 +188,27 @@ namespace eVote360.Core.Application.Services
                     {
                         IsSuccess = false,
                         Message = "No se puede modificar el nombre del partido porque ya participó en una elección."
+                    };
+                }
+            }
+
+            if(dto.Status != entity.Status && dto.Status == false)
+            {
+                if (await HasActiveCandidates(entity.Id))
+                {
+                    return new Result
+                    {
+                        IsSuccess = false,
+                        Message = "No se puede desactivar este partido político porque tiene candidatos activos registrados."
+                    };
+                }
+
+                if (await HasActiveDirector(entity.Id))
+                {
+                    return new Result
+                    {
+                        IsSuccess = false,
+                        Message = "No se puede desactivar este partido político porque tiene un dirigente político asignado."
                     };
                 }
             }
@@ -403,7 +432,7 @@ namespace eVote360.Core.Application.Services
 
         private async Task<bool> HasElectionParticipation(int partyId)
         {
-            return false;
+            return await _assignPositionRepository.GetAllQuery().AnyAsync(a => a.PoliticalPartyId == partyId && a.ElectionId != null);
         }
 
 
@@ -419,7 +448,7 @@ namespace eVote360.Core.Application.Services
 
         private async Task<bool> HasActiveCandidates(int partyId)
         {
-            return false;
+            return await _candidateRepository.GetAllQuery().AnyAsync(c => c.PoliticalPartyId == partyId && c.Status == true);
         }
 
     }

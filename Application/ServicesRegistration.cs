@@ -1,6 +1,7 @@
 ﻿using eVote360.Core.Application.Interfaces;
 using eVote360.Core.Application.Services;
 using eVote360.Core.Domain.Interfaces;
+using eVote360.Infrastructure.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace eVote360.Core.Application
@@ -20,6 +21,8 @@ namespace eVote360.Core.Application
             services.AddTransient<IAssignPositionService, AssignPositionService>();
             services.AddTransient<IElectionService, ElectionService>();
             services.AddTransient<IVoteService, VoteService>();
+            services.AddTransient<IHomeAdminService, HomeAdminService>();
+            services.AddTransient<IHomeDirectorService, HomeDirectorService>();
             #endregion
         }
 

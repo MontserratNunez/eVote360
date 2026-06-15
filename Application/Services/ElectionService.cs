@@ -143,52 +143,6 @@ namespace eVote360.Core.Application.Services
             };
         }
 
-
-        /*
-        public async Task<Result<List<ElectionDto>>> GetAllAsync()
-        {
-            var result = new Result<List<ElectionDto>>();
-
-            var elections = await _electionRepository
-                .GetAllQuery()
-                .OrderByDescending(e => e.Status == ElectionStatus.ACTIVE)
-                .ThenByDescending(e => e.CreatedDate)
-                .ToListAsync();
-
-            var activeParties = await _partyRepository
-                .GetAllQuery()
-                .Where(p => p.Status)
-                .CountAsync();
-
-            var activePositions = await _electivePositionRepository
-                .GetAllQuery()
-                .Where(p => p.Status)
-                .CountAsync();
-
-
-            var votersCount = await _voteRepository
-                .GetAllQuery()
-                .CountAsync();
-
-
-            result.IsSuccess = true;
-
-            result.Data = elections.Select(e => new ElectionDto
-            {
-                Id = e.Id,
-                Name = e.Name,
-                Date = e.Date,
-                StatusText = GetStatusText(e.Status),
-                Status = e.Status,
-                PartiesCount = activeParties,
-                PositionsCount = activePositions,
-                VotersCount = votersCount
-            }).ToList();
-
-            return result;
-        }
-        */
-
         public async Task<Result<List<ElectionDto>>> GetAllAsync()
         {
             var result = new Result<List<ElectionDto>>();
@@ -503,18 +457,27 @@ namespace eVote360.Core.Application.Services
                     int totalVotesInPosition = positionVotes.Count;
 
                     var candidateResults = new List<CandidateResultDto>();
-
                     var positionAssignments = assignments.Where(a => a.ElectivePositionId == position.Id).ToList();
-                    foreach (var assign in positionAssignments)
+
+                    var groupedAssignments = positionAssignments
+                        .GroupBy(a => a.CandidateId)
+                        .ToList();
+
+                    foreach (var group in groupedAssignments)
                     {
-                        int candidateVotes = positionVotes.Count(v => v.CandidateId == assign.CandidateId && !v.IsBlank);
+                        int candidateId = group.Key;
+                        var firstAssign = group.First();
+
+                        string partyNames = string.Join(", ", group.Select(g => g.PoliticalParty?.Name).Where(n => !string.IsNullOrEmpty(n)).Distinct());
+
+                        int candidateVotes = positionVotes.Count(v => v.CandidateId == candidateId && !v.IsBlank);
                         decimal percentage = totalVotesInPosition > 0 ? Math.Round(((decimal)candidateVotes / totalVotesInPosition) * 100, 2) : 0;
 
                         candidateResults.Add(new CandidateResultDto
                         {
-                            CandidateId = assign.CandidateId,
-                            CandidateFullName = $"{assign.Candidate.Name} {assign.Candidate.LastName}",
-                            PoliticalPartyName = assign.PoliticalParty?.Name,
+                            CandidateId = candidateId,
+                            CandidateFullName = $"{firstAssign.Candidate.Name} {firstAssign.Candidate.LastName}",
+                            PoliticalPartyName = partyNames,
                             VotesCount = candidateVotes,
                             Percentage = percentage,
                             IsWinner = false
@@ -542,7 +505,6 @@ namespace eVote360.Core.Application.Services
                     if (totalVotesInPosition > 0)
                     {
                         int maxVotes = candidateResults.First().VotesCount;
-
                         var topContenders = candidateResults.Where(r => r.VotesCount == maxVotes).ToList();
 
                         if (topContenders.Count > 1)
@@ -580,6 +542,7 @@ namespace eVote360.Core.Application.Services
 
             return result;
         }
+
 
 
         private string GetStatusText(ElectionStatus status)

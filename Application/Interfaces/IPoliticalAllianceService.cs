@@ -16,6 +16,7 @@ namespace eVote360.Core.Application.Interfaces
         Task<Result<List<PoliticalAllianceDto>>> GetAllSentAsync(int userId);
         Task<Result<List<CurrentAllianceDto>>> GetCurrentAsync(int userId);
         Task<Result<List<PendingAllianceDto>>> GetPendingAsync(int userId);
+        Task<Result<int>> GetPendingCountAsync(int userId);
         Task<Result> AcceptAsync(int id, int userId);
         Task<Result> RejectAsync(int id, int userId);
         Task<Result> DeleteRequestAsync(int id, int userId);

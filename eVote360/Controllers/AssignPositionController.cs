@@ -68,40 +68,6 @@ namespace eVote360.Controllers
             return View(vm);
         }
 
-        /*
-        public async Task<IActionResult> Index()
-        {
-            var user = _userSession.GetUserSession();
-
-            if (user == null)
-                return RedirectToAction("Index", "Login");
-
-            var result = await _assignPositionService.GetAllAsync(user.Id);
-
-            if (!result.IsSuccess)
-            {
-                TempData["Error"] = result.Message;
-                return View(new List<AssignPositionViewModel>());
-            }
-
-            var vm = result.Data.Select(a => new AssignPositionViewModel
-            {
-                Id = a.Id,
-                CandidateName = a.CandidateName,
-                CandidateLastName = a.CandidateLastName,
-                CandidatePartyName = a.CandidatePartyName,
-                PositionName = a.PositionName,
-                CandidateType = a.CandidateType,
-                IsAlliance = a.IsAlliance,
-                IsEditable = a.IsEditable
-            }).ToList();
-
-            ViewBag.HasActiveElection = await _assignPositionService.HasActiveElection();
-
-            return View(vm);
-        }
-        */
-
 
         public async Task<IActionResult> Create()
         {

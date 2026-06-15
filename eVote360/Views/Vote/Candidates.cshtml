@@ -9,6 +9,14 @@
 
 <div class="container mt-4 mb-5">
 
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger border-0 shadow-xs alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     <div class="row mb-4">
         <div class="col-12 text-center text-md-start">
             <span class="badge badge-blue rounded-pill text-uppercase px-3 py-1 mb-2">Paso Actual: Selección de Candidato</span>
@@ -120,7 +128,6 @@
         background-color: rgba(253, 126, 20, 0.08);
     }
 
-    /* Configuración uniforme de fotos */
     .candidate-photo-wrapper {
         height: 180px;
         width: 100%;
@@ -140,7 +147,6 @@
         object-fit: contain;
     }
 
-    /* Comportamiento de Tarjeta Interactiva Normal */
     .card-candidate {
         transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         border-color: #e9ecef !important;
@@ -153,17 +159,14 @@
             box-shadow: 0 .5rem 1rem rgba(0,0,0,.1) !important;
         }
 
-    /* Ocultar los radio buttons por defecto para usar la UI limpia de la tarjeta */
     .candidate-radio {
         transform: scale(1.1);
     }
 
-        /* Estilos dinámicos cuando el Radio Button esté activo (Checked) */
         .candidate-radio:checked ~ .radio-label {
             color: #198754 !important;
         }
 
-    /* Clase de Bootstrap inyectada por JS para cambiar la tarjeta activa */
     .card-candidate.selected-card {
         border-color: #198754 !important;
         background-color: rgba(25, 135, 84, 0.02);
@@ -191,15 +194,12 @@
                 });
             }
 
-            // Escuchar cambios en los radios
             radios.forEach(radio => {
                 radio.addEventListener('change', updateVisualSelection);
             });
 
-            // Soporte para que si el usuario da click directo en la tarjeta, dispare el radio
             document.querySelectorAll('.card-candidate').forEach(card => {
                 card.addEventListener('click', function(e) {
-                    // Evitar bucle si se hace clic directamente en el input de radio
                     if(e.target.type !== 'radio') {
                         const radio = this.querySelector('.candidate-radio');
                         if(radio) {
@@ -210,7 +210,6 @@
                 });
             });
 
-            // Correr validación visual inicial al cargar la página (por si hay respuestas previas)
             updateVisualSelection();
         });
     </script>

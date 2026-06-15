@@ -62,6 +62,7 @@
                             <tr>
                                 <th>Nombre de la Elección</th>
                                 <th>Fecha de Realización</th>
+                                <th></th>
                                 <th>Partidos</th>
                                 <th>Puestos</th>
                                 <th>Votantes</th>
@@ -83,6 +84,24 @@
                                         @item.Name
                                     </td>
                                     <td class="text-muted">@item.Date.ToString("dd/MM/yyyy")</td>
+                                    @if (item.Status == ElectionStatus.PENDING)
+                                    {
+                                        <td>
+                                            <a href="javascript:void(0)" class="text-primary text-decoration-none lh-1 d-inline-block"
+                                               tabindex="0"
+                                               data-bs-toggle="popover"
+                                               data-bs-trigger="hover focus"
+                                               data-bs-placement="top"
+                                               title="Información de Datos"
+                                               data-bs-content="La elección no ha sido realizada. Los datos corresponden a los partidos, puestos electivos y ciudadanos activos registrados actualmente en el sistema.">
+                                                <i class="bi bi-info-circle-fill fs-5"></i>
+                                            </a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
                                     <td>
                                         <span class="badge bg-secondary rounded-pill">@item.PartiesCount</span>
                                     </td>
@@ -131,3 +150,14 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                return new bootstrap.Popover(popoverTriggerEl)
+            });
+        });
+    </script>
+}

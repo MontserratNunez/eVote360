@@ -15,12 +15,23 @@ namespace eVote360.Core.Application.Services
         private readonly IUserRepository _userRepository;
         private readonly IPoliticalPartyRepository _partyRepository;
         private readonly IElectionRepository _electionRepository;
-        public PoliticalLeaderAssignmentService(IPoliticalLeaderAssignmentRepository politicalLeaderAssignmentRepository, IUserRepository userRepository, IPoliticalPartyRepository politicalPartyRepository, IElectionRepository election)
+        private readonly IAssignPositionRepository _assignPositionRepository;
+        private readonly IPoliticalAllienceRepository _allianceRepository;
+        public PoliticalLeaderAssignmentService(
+            IPoliticalLeaderAssignmentRepository politicalLeaderAssignmentRepository, 
+            IUserRepository userRepository, 
+            IPoliticalPartyRepository politicalPartyRepository, 
+            IElectionRepository election,
+            IAssignPositionRepository assignPositionRepository,
+            IPoliticalAllienceRepository politicalAllienceRepository
+            )
         {
             _assignmentRepository = politicalLeaderAssignmentRepository;
             _userRepository = userRepository;
             _partyRepository = politicalPartyRepository;
             _electionRepository = election;
+            _assignPositionRepository = assignPositionRepository;
+            _allianceRepository = politicalAllienceRepository;
         }
 
         public async Task<Result<List<LeaderAssignmentDto>>> GetAllAsync()
@@ -202,6 +213,23 @@ namespace eVote360.Core.Application.Services
 
         private async Task<bool> HasActiveDependencies(int userId, int partyId)
         {
+            bool hasCurrentAssignments = await _assignPositionRepository.GetAllQuery().AnyAsync(a => a.PoliticalPartyId == partyId && a.ElectionId == null);
+
+            if (hasCurrentAssignments)
+            {
+                return true;
+            }
+
+            bool hasActiveAlliances = await _allianceRepository.GetAllQuery()
+            .AnyAsync(a =>
+                (a.RequestingPartyId == partyId || a.ReceivingPartyId == partyId) &&
+                (a.Status == PoliticalAllianceStatus.PENDING || a.Status == PoliticalAllianceStatus.ACCEPTED));
+
+            if (hasActiveAlliances)
+            {
+                return true;
+            }
+
             return false;
         }
 

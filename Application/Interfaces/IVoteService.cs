@@ -13,8 +13,8 @@ namespace eVote360.Core.Application.Interfaces
         Task<Result<(int CitizenId, int ElectionId)>> StartAsync(StartVoteDto dto);
         Task<Result> ValidateIdentityAsync(OcrValidationDto dto);
         Task<Result> VerifyCodeAsync(VerifyCodeDto dto);
-        Task<Result<List<AvailablePositionsDto>>> GetAvailablePositionsAsync(Dictionary<int, int?> selectedVotes);
-        Task<Result<CandidatesDto>> GetCandidatesByPositionAsync(int positionId);
+        Task<Result<List<AvailablePositionsDto>>> GetAvailablePositionsAsync(Dictionary<int, int?> selectedVotes, int electionId);
+        Task<Result<CandidatesDto>> GetCandidatesByPositionAsync(int positionId, int electionId);
         Task<Result> FinalizeVotingAsync(FinalizeVoteDto dto);
     }
 }

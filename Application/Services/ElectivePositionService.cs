@@ -12,11 +12,13 @@ namespace eVote360.Core.Application.Services
     {
         private readonly IElectivePositionRepository _electivePositionRepository;
         private readonly IElectionRepository _electionRepository;
+        private readonly IAssignPositionRepository _assignPositionRepository;
 
-        public ElectivePositionService(IElectivePositionRepository electivePositionRepository, IElectionRepository electionRepository)
+        public ElectivePositionService(IElectivePositionRepository electivePositionRepository, IElectionRepository electionRepository, IAssignPositionRepository assignPositionRepository)
         {
             _electivePositionRepository = electivePositionRepository;
             _electionRepository = electionRepository;
+            _assignPositionRepository = assignPositionRepository;
         }
 
         public async Task<Result<List<ElectivePositionDto>>> GetAllAsync()
@@ -56,55 +58,66 @@ namespace eVote360.Core.Application.Services
 
         public async Task<Result> CreateAsync(CreateElectivePositionDto dto)
         {
-            if (await HasActiveElection())
+            try
+            {
+                if (await HasActiveElection())
+                {
+                    return new Result
+                    {
+                        IsSuccess = false,
+                        Message = "No se puede crear un puesto electivo mientras exista una elección activa."
+                    };
+                }
+
+                if (string.IsNullOrWhiteSpace(dto.Name))
+                    return new Result { IsSuccess = false, Message = "El nombre del puesto es requerido." };
+
+                if (string.IsNullOrWhiteSpace(dto.Description))
+                    return new Result { IsSuccess = false, Message = "La descripción es requerida." };
+
+                string name = dto.Name.Trim();
+
+                if (await _electivePositionRepository.GetAllQuery().AnyAsync(e => e.Name.ToLower() == name.ToLower()))
+                {
+                    return new Result
+                    {
+                        IsSuccess = false,
+                        Message = "Ya existe un puesto electivo registrado con este nombre."
+                    };
+                }
+
+                ElectivePosition entity = new()
+                {
+                    Name = name,
+                    Description = dto.Description.Trim(),
+                    Status = true
+                };
+
+                var created = await _electivePositionRepository.AddAsync(entity);
+
+                if (created == null)
+                {
+                    return new Result
+                    {
+                        IsSuccess = false,
+                        Message = "No se pudo registrar el puesto electivo."
+                    };
+                }
+
+                return new Result
+                {
+                    IsSuccess = true,
+                    Message = "Puesto electivo creado correctamente."
+                };
+            }
+            catch (Exception)
             {
                 return new Result
                 {
                     IsSuccess = false,
-                    Message = "No se puede crear un puesto electivo mientras exista una elección activa."
+                    Message = "Error al crear puesto electivo."
                 };
             }
-
-            if (string.IsNullOrWhiteSpace(dto.Name))
-                return new Result { IsSuccess = false, Message = "El nombre del puesto es requerido." };
-
-            if (string.IsNullOrWhiteSpace(dto.Description))
-                return new Result { IsSuccess = false, Message = "La descripción es requerida." };
-
-            string name = dto.Name.Trim();
-
-            if (await _electivePositionRepository.GetAllQuery().AnyAsync(e => e.Name.ToLower() == name.ToLower()))
-            {
-                return new Result
-                {
-                    IsSuccess = false,
-                    Message = "Ya existe un puesto electivo registrado con este nombre."
-                };
-            }
-
-            ElectivePosition entity = new()
-            {
-                Name = name,
-                Description = dto.Description.Trim(),
-                Status = true
-            };
-
-            var created = await _electivePositionRepository.AddAsync(entity);
-
-            if (created == null)
-            {
-                return new Result
-                {
-                    IsSuccess = false,
-                    Message = "No se pudo registrar el puesto electivo."
-                };
-            }
-
-            return new Result
-            {
-                IsSuccess = true,
-                Message = "Puesto electivo creado correctamente."
-            };
         }
 
         public async Task<Result> UpdateAsync(UpdateElectivePositionDto dto)
@@ -169,7 +182,6 @@ namespace eVote360.Core.Application.Services
                     };
                 }
             }
-
 
             entity.Name = name;
             entity.Description = dto.Description.Trim();
@@ -256,7 +268,7 @@ namespace eVote360.Core.Application.Services
             }
 
             if (await _electivePositionRepository.GetAllQuery()
-                .AnyAsync(e => e.Name.ToLower() == entity.Name.ToLower() && e.Id != entity.Id&& e.Status)
+                .AnyAsync(e => e.Name.ToLower() == entity.Name.ToLower() && e.Id != entity.Id && e.Status)
                 )
             {
                 return new Result
@@ -350,7 +362,7 @@ namespace eVote360.Core.Application.Services
 
         public async Task<bool> HasPositionBeenUsed(int positionId)
         {
-            return false;
+            return await _assignPositionRepository.GetAllQuery().AnyAsync(a => a.ElectivePositionId == positionId && a.ElectionId != null);
         }
 
 
@@ -364,7 +376,11 @@ namespace eVote360.Core.Application.Services
 
         private async Task<bool> HasActiveCandidates(int positionId)
         {
-            return false;
+            return await _assignPositionRepository.GetAllQuery()
+                .Include(a => a.Candidate)
+                .AnyAsync(a => a.ElectivePositionId == positionId
+                            && a.ElectionId == null
+                            && a.Candidate.Status == true);
         }
 
     }

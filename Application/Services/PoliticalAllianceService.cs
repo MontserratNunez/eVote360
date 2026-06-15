@@ -17,13 +17,15 @@ namespace eVote360.Core.Application.Services
         private readonly IPoliticalPartyRepository _partyRepository;
         private readonly IPoliticalAllienceRepository _allianceRepository;
         private readonly IElectionRepository _electionRepository;
+        private readonly IAssignPositionRepository _assignPositionRepository;
 
         public PoliticalAllianceService(ICandidateRepository candidateRepository,
             IPoliticalLeaderAssignmentRepository assignmentRepository, 
             IUserRepository userRepository,
             IPoliticalPartyRepository politicalPartyRepository, 
             IPoliticalAllienceRepository politicalAllienceRepository,
-            IElectionRepository electionRepository
+            IElectionRepository electionRepository,
+            IAssignPositionRepository assignPositionRepository
             )
         {
             _candidateRepository = candidateRepository;
@@ -32,6 +34,7 @@ namespace eVote360.Core.Application.Services
             _partyRepository = politicalPartyRepository;
             _allianceRepository = politicalAllienceRepository;
             _electionRepository = electionRepository;
+            _assignPositionRepository = assignPositionRepository;
         }
 
         public async Task<Result> CreateAsync(CreatePoliticalAllianceDto dto, int userId)
@@ -336,6 +339,33 @@ namespace eVote360.Core.Application.Services
                 Status = "En espera de respuesta"
             }).ToList();
 
+            return result;
+        }
+
+        public async Task<Result<int>> GetPendingCountAsync(int userId)
+        {
+            var result = new Result<int>();
+
+            var assignment = await _assignmentRepository
+                .GetAllQuery()
+                .FirstOrDefaultAsync(a => a.UserId == userId);
+
+            if (assignment == null)
+            {
+                result.IsSuccess = false;
+                result.Message = "No tiene un partido político asignado.";
+                return result;
+            }
+
+            int myPartyId = assignment.PoliticalPartyId;
+
+            var alliances = await _allianceRepository.GetAllQueryWithInclude(["RequestingParty"]).AsNoTracking()
+               .Where(a =>a.Status == PoliticalAllianceStatus.PENDING && a.ReceivingPartyId == myPartyId)
+               .CountAsync();
+
+
+            result.IsSuccess = true;
+            result.Data = alliances;
             return result;
         }
 
@@ -742,7 +772,13 @@ namespace eVote360.Core.Application.Services
 
         private async Task<bool> HasSharedCandidateAssignments(int partyA, int partyB)
         {
-            return false;
+            return await _assignPositionRepository.GetAllQuery()
+                .Include(a => a.Candidate)
+                .AnyAsync(a => a.ElectionId == null &&
+                    (
+                        (a.PoliticalPartyId == partyA && a.Candidate.PoliticalPartyId == partyB) ||
+                        (a.PoliticalPartyId == partyB && a.Candidate.PoliticalPartyId == partyA)
+                    ));
         }
     }
 }

@@ -38,9 +38,9 @@
     </div>
 }
 
-<ul class="nav nav-tabs mb-3 d-flex w-100">
+<ul class="nav nav-tabs mb-0 d-flex w-100 allianceNavbar bg-light rounded rounded-bottom-0 shadow-sm">
     <li class="nav-item">
-        <a class="nav-link @(activeTab == "All" ? "active fw-bold border-bottom-0 shadow-sm" : "text-muted")" asp-action="All">
+        <a class="nav-link @(activeTab == "All" ? "active fw-bold border-bottom-0" : "text-muted")" asp-action="All">
             <i class="bi bi-send me-2"></i>Solicitudes realizadas
         </a>
     </li>
@@ -50,8 +50,19 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link @(activeTab == "Pending" ? "active fw-bold border-bottom-0 shadow-sm" : "text-muted")" asp-action="Pending">
+        <a class="nav-link @(activeTab == "Pending" ? "active fw-bold border-bottom-0 shadow-sm" : "text-muted") position-relative" asp-action="Pending">
             <i class="bi bi-envelope-exclamation me-2"></i>Solicitudes pendientes
+            @if (ViewBag.PendingCount != null && ViewBag.PendingCount > 0)
+            {
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    @ViewBag.PendingCount
+                    <span class="visually-hidden">solicitudes pendientes</span>
+                </span>
+            }
         </a>
     </li>
 </ul>
+
+<style>
+
+</style>

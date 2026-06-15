@@ -1,7 +1,7 @@
 using eVote360.Attributes;
 using eVote360.Core.Application.Interfaces;
-using eVote360.Middlewares;
 using Microsoft.AspNetCore.Mvc;
+using eVote360.Core.Application.ViewModels.HomeDirector;
 
 namespace eVote360.Controllers
 {
@@ -9,23 +9,40 @@ namespace eVote360.Controllers
     public class HomeDirectorController : Controller
     {
         private readonly IUserSession _userSession;
+        private readonly IHomeDirectorService _homeDirectorService;
 
-        public HomeDirectorController(IUserSession userSession)
+        public HomeDirectorController(IUserSession userSession, IHomeDirectorService homeDirectorService)
         {
             _userSession = userSession;
+            _homeDirectorService = homeDirectorService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var userSession = _userSession.GetUserSession();
+            var viewModel = new DirectorHomeViewModel();
 
-            if (userSession == null)
+            var session = _userSession.GetUserSession();
+
+            if (session == null)
             {
                 return RedirectToRoute(new { controller = "Login", action = "Index" });
             }
 
-            ViewBag.Name = userSession.Name;
-            return View();
+            ViewBag.Name = session.Name;
+
+            var result = await _homeDirectorService.GetDirectorDashboardDataAsync(session.Id);
+
+            if (!result.IsSuccess)
+            {
+                TempData["Error"] = result.Message;
+                return View(viewModel);
+            }
+
+            viewModel.DashboardData = result.Data;
+            return View(viewModel);
         }
+
     }
 }
+
+

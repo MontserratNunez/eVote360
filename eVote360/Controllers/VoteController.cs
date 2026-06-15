@@ -184,11 +184,11 @@ namespace eVote360.Controllers
             if (!session.CodeValidated)
                 return RedirectToAction(nameof(VerifyCode));
 
-            var result = await _voteService.GetAvailablePositionsAsync(session.SelectedVotes);
+            var result = await _voteService.GetAvailablePositionsAsync(session.SelectedVotes, session.ElectionId);
 
             if (!result.IsSuccess)
             {
-                ModelState.AddModelError("", result.Message);
+                TempData["Error"] = result.Message;
                 return View(new PositionsViewModel());
             }
 
@@ -250,7 +250,7 @@ namespace eVote360.Controllers
             if (!session.CodeValidated)
                 return RedirectToAction(nameof(VerifyCode));
 
-            var result = await _voteService.GetCandidatesByPositionAsync(positionId);
+            var result = await _voteService.GetCandidatesByPositionAsync(positionId, session.ElectionId);
             if (!result.IsSuccess)
             {
                 TempData["Error"] = result.Message;
@@ -292,7 +292,7 @@ namespace eVote360.Controllers
 
             if (!ModelState.IsValid || vm.SelectedAssignPositionId == null)
             {
-                var result = await _voteService.GetCandidatesByPositionAsync(vm.PositionId);
+                var result = await _voteService.GetCandidatesByPositionAsync(vm.PositionId, session.ElectionId);
                 vm.Candidates = result.Data.Candidates.Select(c => new CandidateOptionViewModel
                 {
                     AssignPositionId = c.AssignPositionId,
@@ -304,7 +304,7 @@ namespace eVote360.Controllers
                     PoliticalPartyLogoPath = c.PoliticalPartyLogoPath
                 }).ToList();
 
-                ModelState.AddModelError("", "Debe seleccionar un candidato antes de votar.");
+                TempData["Error"] = "Debe seleccionar un candidato antes de votar.";
                 return View(vm);
             }
 
@@ -320,9 +320,17 @@ namespace eVote360.Controllers
         {
             var session = _citizenSession.Get();
 
-            if (session == null) return RedirectToAction(nameof(Index));
-            if (!session.IdentityValidated || !session.CodeValidated) return RedirectToAction(nameof(Index));
-            if (session.HasFinalizedVoted) return RedirectToAction("VotedSuccess");
+            if (session == null){
+                return RedirectToAction(nameof(Index));
+            }
+            if (!session.IdentityValidated || !session.CodeValidated)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            if (session.HasFinalizedVoted)
+            {
+                return RedirectToAction("VotedSuccess");
+            }
 
             var dto = new FinalizeVoteDto
             {
@@ -335,7 +343,7 @@ namespace eVote360.Controllers
 
             if (!result.IsSuccess)
             {
-                TempData["FinalizeErrorMessage"] = result.Message;
+                TempData["Error"] = result.Message;
                 return RedirectToAction(nameof(Positions));
             }
 
