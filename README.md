@@ -1,7 +1,6 @@
 # eVote360 Pro
 
-## 1. Brief Description
-**eVote360 Pro** is an electronic voting web application designed to manage the entire lifecycle of an electoral process. It enables the secure registration and validation of eligible citizens (voters), and provides robust management modules for configuring elections, political parties, elective positions, candidates, and political alliances. The system ensures vote confidentiality, validates voter identity using OCR and email verification, and maintains strict role-based access control.
+**eVote360 Pro** is an electronic voting web application designed to manage the entire lifecycle of an electoral process. It enables the registration of eligible citizens (voters), and provides management modules for configuring elections, political parties, elective positions, candidates, and political alliances.
 
 ## 2. Technologies Used
 - **Framework:** ASP.NET Core MVC (.NET 9)
