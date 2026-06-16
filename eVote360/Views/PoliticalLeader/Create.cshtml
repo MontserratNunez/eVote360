@@ -1,0 +1,64 @@
+﻿@using eVote360.Core.Application.ViewModels.LeaderAssignment
+
+@model CreateAssignmentViewModel
+@{
+    ViewData["Title"] = "Asignar Dirigente";
+}
+
+<div class="container mt-4">
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @ViewBag.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
+
+            <div class="card card-modern shadow-sm">
+                <div class="card-header pt-4">
+                    <div class="text-center">
+                        <h4 class="fw-bold mb-1">Nueva asignación de dirigente</h4>
+                        <p class="text-muted small m-1">Vincula un usuario con un partido político</p>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+
+                        <div class="mb-3">
+                            <label asp-for="UserId" class="form-label text-muted small">Seleccionar Dirigente:</label>
+                            <select asp-for="UserId" class="form-select form-control-modern"
+                                    asp-items="@(new SelectList(Model.Users, "Id", "Name"))">
+                                <option value="">Seleccione un usuario dirigente</option>
+                            </select>
+                            <span asp-validation-for="UserId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="PoliticalPartyId" class="form-label text-muted small">Seleccionar Partido Político:</label>
+                            <select asp-for="PoliticalPartyId" class="form-select form-control-modern"
+                                    asp-items="@(new SelectList(Model.Parties, "Id", "Name"))">
+                                <option value="">Seleccione un partido político</option>
+                            </select>
+                            <span asp-validation-for="PoliticalPartyId" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-soft-orange">
+                                <i class="bi bi-arrow-left-short"></i> Volver atrás
+                            </a>
+                            <button type="submit" class="btn btn-blue">
+                                <i class="bi bi-floppy2"></i> Guardar Asignación
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

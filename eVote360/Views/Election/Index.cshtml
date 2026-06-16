@@ -1,0 +1,163 @@
+﻿@using eVote360.Core.Application.ViewModels.Election
+@using eVote360.Core.Domain.Common.Enums
+
+
+@model List<ElectionViewModel>
+@{
+    ViewData["Title"] = "Elecciones";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="page-title">Procesos Electorales</h2>
+            <p class="page-subtitle">Configuración y monitoreo de las elecciones del sistema</p>
+        </div>
+        
+        @if (!ViewBag.HasActiveElection)
+        {
+        <a class="btn btn-blue shadow-sm" asp-action="Create">
+            <i class="bi bi-calendar-plus"></i> Crear elección
+        </a>
+        }
+    </div>
+
+    @if (ViewBag.HasActiveElection)
+    {
+        <div class="alert alert-warning d-inline-block p-2">No se pueden modificar elecciones mientras exista una elección activa.</div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success border-0 alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger border-0 alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card card-modern shadow-sm">
+        <div class="card-body">
+
+            @if (Model == null || Model.Count == 0)
+            {
+                <div class="text-center p-4">
+                    <i class="bi bi-calendar-x fs-1 text-muted"></i>
+                    <p class="mt-3 text-muted">No hay procesos electorales registrados</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-modern align-middle">
+                        <thead>
+                            <tr>
+                                <th>Nombre de la Elección</th>
+                                <th>Fecha de Realización</th>
+                                <th></th>
+                                <th>Partidos</th>
+                                <th>Puestos</th>
+                                <th>Votantes</th>
+                                <th>Estado</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr class="@(item.Status == ElectionStatus.ACTIVE ? "table-success fw-semibold" : "")">
+                                    <td>
+                                        @if (item.Status == ElectionStatus.ACTIVE)
+                                        {
+                                            <span class="text-primary me-1" title="Elección Activa del Sistema">
+                                                <i class="bi bi-check-circle-fill"></i>
+                                            </span>
+                                        }
+                                        @item.Name
+                                    </td>
+                                    <td class="text-muted">@item.Date.ToString("dd/MM/yyyy")</td>
+                                    @if (item.Status == ElectionStatus.PENDING)
+                                    {
+                                        <td>
+                                            <a href="javascript:void(0)" class="text-primary text-decoration-none lh-1 d-inline-block"
+                                               tabindex="0"
+                                               data-bs-toggle="popover"
+                                               data-bs-trigger="hover focus"
+                                               data-bs-placement="top"
+                                               title="Información de Datos"
+                                               data-bs-content="La elección no ha sido realizada. Los datos corresponden a los partidos, puestos electivos y ciudadanos activos registrados actualmente en el sistema.">
+                                                <i class="bi bi-info-circle-fill fs-5"></i>
+                                            </a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    <td>
+                                        <span class="badge bg-secondary rounded-pill">@item.PartiesCount</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary rounded-pill">@item.PositionsCount</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-dark rounded-pill">@item.VotersCount</span>
+                                    </td>
+                                    <td>
+                                        @if (item.Status == ElectionStatus.ACTIVE)
+                                        {
+                                            <span class="badge rounded-pill badge-active badge-status">@item.StatusText</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge rounded-pill badge-inactive badge-status">@item.StatusText</span>
+                                        }
+                                    </td>
+                                    <td class="text-end">
+                                        @if (item.Status == ElectionStatus.PENDING && !ViewBag.HasActiveElection)
+                                        {
+                                            <a class="btn btn-sm btn-success me-1" asp-action="ConfirmActivate" asp-route-id="@item.Id">
+                                                <i class="bi bi-play-circle"></i> Activar
+                                            </a>
+                                        }
+                                        @if (item.Status == ElectionStatus.ACTIVE)
+                                        {
+                                            <a class="btn btn-sm btn-danger me-1" asp-action="ConfirmFinish" asp-route-id="@item.Id">
+                                                <i class="bi bi-play-circle"></i> Finalizar
+                                            </a>
+                                        }
+                                        @if (item.Status == ElectionStatus.FINISHED)
+                                        {
+                                            <a class="btn btn-sm btn-secondary me-1" asp-action="Results" asp-route-id="@item.Id">
+                                                <i class="bi bi-play-circle"></i> Ver resultados
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                             }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                return new bootstrap.Popover(popoverTriggerEl)
+            });
+        });
+    </script>
+}

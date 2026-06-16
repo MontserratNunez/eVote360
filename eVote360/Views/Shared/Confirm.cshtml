@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Confirmación";
+    var id = ViewBag.Id;
+    var message = ViewBag.Message ?? "¿Está seguro?";
+    var action = ViewBag.ActionName ?? "Index";
+    var controller = ViewBag.ControllerName ?? "Home";
+    var buttonClass = ViewBag.ButtonClass ?? "btn-danger";
+    var buttontext = ViewBag.ButtonText ?? "Aceptar";
+}
+
+<div class="container mt-4 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-sm p-5">
+        <div class="card-body d-flex justify-content-center align-items-center">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2>Confirmación</h2>
+
+                    <p class="mt-4">@message</p>
+
+                    <form asp-action="@action" asp-controller="@controller" method="post">
+                        <input type="hidden" name="id" value="@id" />
+                        <div class="mt-4">
+                            <a asp-action="Index" class="btn btn-secondary"> Cancelar</a>
+                            <button type="submit" class="btn @buttonClass ms-1">@buttontext</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

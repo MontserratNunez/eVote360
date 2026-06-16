@@ -1,0 +1,21 @@
+﻿@functions {
+    string IsActive(string controller)
+    {
+        var current = ViewContext.RouteData.Values["controller"]?.ToString();
+        return current == controller ? "active" : "";
+    }
+}
+
+
+<li class="nav-item">
+    <a class="nav-link text-light @IsActive("HomeDirector")" asp-area="" asp-controller="HomeDirector" asp-action="Index">Home</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link text-light @IsActive("Candidate")" asp-area="" asp-controller="Candidate" asp-action="Index">Canditatos</a>
+</li>
+<li>
+    <a class="nav-link text-light @IsActive("PoliticalAlliance")" asp-area="" asp-controller="PoliticalAlliance" asp-action="All">Alianzas políticas</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link text-light @IsActive("AssignPosition")" asp-area="" asp-controller="AssignPosition" asp-action="Index">Asignar candidato</a>
+</li>

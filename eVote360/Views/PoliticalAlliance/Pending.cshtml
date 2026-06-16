@@ -1,0 +1,66 @@
+﻿@using eVote360.Core.Application.ViewModels.PoliticalAlliance
+
+@model List<PendingAllianceViewModel>
+@{
+    ViewData["Title"] = "Solicitudes Pendientes";
+    ViewData["ActiveTab"] = "Pending";
+}
+
+<div class="container mt-4">
+    <partial name="_AllianceNavbar" view-data="ViewData" />
+
+    <div class="card card-modern shadow-sm border-top-0 rounded-top-0">
+        <div class="card-body">
+
+            @if (Model == null || Model.Count == 0)
+            {
+                <div class="text-center p-4">
+                    <i class="bi bi-mailbox fs-1 text-muted"></i>
+                    <p class="mt-3 text-muted">No hay solicitudes pendientes por responder.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-modern align-middle">
+                        <thead>
+                            <tr>
+                                <th>Partido solicitante</th>
+                                <th>Fecha de solicitud</th>
+                                <th>Estado</th>
+                                @if (!ViewBag.HasActiveElection)
+                                { 
+                                    <th class="text-end">Acciones</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@item.PartyName</td>
+                                    <td class="text-muted">@item.RequestDate.ToString("dd/MM/yyyy hh:mm tt")</td>
+                                    <td>
+                                        <span class="badge rounded-pill badge-orange badge-status">En espera de respuesta</span>
+                                    </td>
+                                    @if (!ViewBag.HasActiveElection)
+                                    {
+                                        <td class="text-end">
+                                            <a class="btn btn-sm btn-success me-1" asp-action="Confirm" asp-route-id="@item.Id" asp-route-accept="true">
+                                                <i class="bi bi-check-lg"></i> Aceptar
+                                            </a>
+                                            <a class="btn btn-sm btn-danger" asp-action="Confirm" asp-route-id="@item.Id" asp-route-accept="false">
+                                                <i class="bi bi-xl-lg"></i> Rechazar
+                                            </a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+﻿@using eVote360.Core.Application.ViewModels.PoliticalAlliance
+
+@model CreatePoliticalAllianceViewModel
+@{
+    ViewData["Title"] = "Crear Solicitud de Alianza";
+}
+
+<div class="container mt-4">
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger border-0 alert-dismissible fade show" role="alert">
+            @ViewBag.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
+
+            <div class="card card-modern shadow-sm">
+                <div class="card-header pt-4">
+                    <div class="text-center">
+                        <h4 class="fw-bold mb-1">Nueva Solicitud de Alianza</h4>
+                        <p class="text-muted small m-1">Selecciona el partido político al que deseas enviar la propuesta de alianza.</p>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+
+                        <div class="mb-4">
+                            <label asp-for="PoliticalPartyId" class="form-label text-muted small fw-bold">Partido Político Destino:</label>
+                            <select asp-for="PoliticalPartyId" class="form-select form-control-modern"
+                                    asp-items="@(new SelectList(Model.Parties, "Id", "Name"))">
+                                <option value="">Seleccione un partido</option>
+                            </select>
+                            <span asp-validation-for="PoliticalPartyId" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Current" class="btn btn-soft-orange">
+                                <i class="bi bi-arrow-left-short"></i> Volver atrás
+                            </a>
+                            <button type="submit" class="btn btn-blue">
+                                <i class="bi bi-send-check"></i> Crear Solicitud
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

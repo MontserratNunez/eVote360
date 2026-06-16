@@ -1,0 +1,167 @@
+﻿@using eVote360.Core.Application.ViewModels.HomeDirector
+
+@model DirectorHomeViewModel
+@{
+    ViewData["Title"] = "Panel del Dirigente";
+}
+
+<div class="container mt-4 mb-5">
+
+    <div class="mb-4 py-3 border-bottom d-flex align-items-center justify-content-between">
+        <div>
+            <h2 class="fw-bold text-dark m-0">Bienvenido, @ViewBag.Name</h2>
+        </div>
+        <div class="text-end d-none d-md-block">
+            <span class="badge bg-light text-secondary border px-3 py-2 fs-6 rounded-pill">
+                <i class="bi bi-calendar3 me-1"></i> @DateTime.Now.ToString("dd/MM/yyyy")
+            </span>
+        </div>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger border-0 shadow-sm alert-dismissible fade show mb-4" role="alert">
+             @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    
+    <div class="card card-modern border-0 shadow-sm p-4 mb-4 bg-white">
+        <div class="d-flex flex-column flex-sm-row align-items-center gap-4">
+            <div class="party-logo-frame p-2 border rounded-circle bg-light d-flex align-items-center justify-content-center shadow-xs">
+                @if (!string.IsNullOrEmpty(Model.DashboardData.LogoPath))
+                {
+                    <img src="~/@Model.DashboardData.LogoPath" alt="Logo de @Model.DashboardData.PartyName" class="img-fluid rounded-circle object-fit-contain" style="width: 70px; height: 70px;">
+                }
+                else
+                {
+                    <i class="bi bi-flag-fill display-5 text-secondary"></i>
+                }
+            </div>
+            <div class="text-center text-sm-start">
+                <div class="d-flex flex-column flex-sm-row align-items-center gap-2">
+                    <h3 class="fw-bold text-dark m-0">@Model.DashboardData.PartyName</h3>
+                    <span class="badge bg-dark px-2.5 py-1.5 fs-6 font-monospace">@Model.DashboardData.Acronym</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row g-3">
+
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card metric-card h-100 border-0 shadow-sm p-4 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small text-uppercase fw-bold d-block mb-1">Candidatos Activos</span>
+                        <h2 class="fw-bold text-dark m-0">@Model.DashboardData.ActiveCandidatesCount</h2>
+                    </div>
+                    <div class="metric-icon bg-soft-orange text-orange rounded-3">
+                        <i class="bi bi-person-check fs-2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card metric-card h-100 border-0 shadow-sm p-4 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small text-uppercase fw-bold d-block mb-1">Candidatos Inactivos</span>
+                        <h2 class="fw-bold text-dark m-0">@Model.DashboardData.InactiveCandidatesCount</h2>
+                    </div>
+                    <div class="metric-icon bg-soft-orange text-orange rounded-3">
+                        <i class="bi bi-person-x fs-2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card metric-card h-100 border-0 shadow-sm p-4 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small text-uppercase fw-bold d-block mb-1">Asignados a Puestos</span>
+                        <h2 class="fw-bold text-dark m-0">@Model.DashboardData.CandidatesAssignedToPositionsCount</h2>
+                    </div>
+                    <div class="metric-icon bg-soft-orange text-orange rounded-3">
+                        <i class="bi bi-file-earmark-person fs-2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-6">
+            <div class="card metric-card h-100 border-0 shadow-sm p-4 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small text-uppercase fw-bold d-block mb-1">Alianzas Aprobadas</span>
+                        <h2 class="fw-bold text-dark m-0">@Model.DashboardData.ApprovedAlliancesCount</h2>
+                    </div>
+                    <div class="metric-icon bg-soft-orange text-orange rounded-3">
+                        <i class="bi bi-shield-check fs-2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-6">
+            <div class="card metric-card h-100 border-0 shadow-sm p-4 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small text-uppercase fw-bold d-block mb-1">Solicitudes de Alianza Pendientes</span>
+                        <h2 class="fw-bold text-dark m-0">@Model.DashboardData.PendingAllianceRequestsCount</h2>
+                    </div>
+                    <div class="metric-icon bg-soft-orange text-orange rounded-3">
+                        <i class="bi bi-envelope-exclamation fs-2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+
+    .bg-soft-orange {
+        background-color: #ffecdf;
+    }
+
+    .text-orange {
+        color: #f97316;
+    }
+
+
+    .tracking-wider {
+        letter-spacing: 0.05rem;
+    }
+
+    .badge-orange {
+        background-color: #fd7e14;
+        color: #fff;
+    }
+
+    .party-logo-frame {
+        width: 86px;
+        height: 86px;
+    }
+
+    
+
+    .metric-card {
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .metric-icon {
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>

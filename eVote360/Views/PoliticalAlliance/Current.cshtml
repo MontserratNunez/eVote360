@@ -1,0 +1,59 @@
+﻿@using eVote360.Core.Application.ViewModels.PoliticalAlliance
+
+@model List<CurrentAllianceViewModel>
+@{
+    ViewData["Title"] = "Alianzas Vigentes";
+    ViewData["ActiveTab"] = "Current";
+}
+
+<div class="container mt-4">
+    <partial name="_AllianceNavbar" view-data="ViewData" />
+
+    <div class="card card-modern shadow-sm border-top-0 rounded-top-0">
+        <div class="card-body">
+
+            @if (Model == null || Model.Count == 0)
+            {
+                <div class="text-center p-4">
+                    <i class="bi bi-handshake fs-1 text-muted"></i>
+                    <p class="mt-3 text-muted">No tienes alianzas vigentes en este momento.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-modern align-middle">
+                        <thead>
+                            <tr>
+                                <th>Partido aliado</th>
+                                <th>Fecha de aceptación</th>
+                                @if (!ViewBag.HasActiveElection)
+                                {
+                                    <th class="text-end">Acción</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@item.PartnerName</td>
+                                    <td class="text-muted">@item.AcceptanceDate.ToString("dd/MM/yyyy hh:mm tt")</td>
+                                    @if (!ViewBag.HasActiveElection)
+                                    {
+                                        <td class="text-end">
+                                            <a class="btn btn-sm btn-danger" asp-action="ConfirmDeleteCurrent" asp-route-id="@item.Id">
+                                                <i class="bi bi-x-circle"></i> Eliminar alianza
+                                            </a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

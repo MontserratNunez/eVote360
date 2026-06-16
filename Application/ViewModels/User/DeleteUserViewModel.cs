@@ -1,4 +1,4 @@
-﻿namespace eVote360.Core.Application.ViewModels.Asset
+﻿namespace eVote360.Core.Application.ViewModels.User
 {
     public class DeleteUserViewModel
     {      

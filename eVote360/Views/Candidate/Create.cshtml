@@ -1,0 +1,69 @@
+﻿@using eVote360.Core.Application.ViewModels.Candidate
+
+@model CreateCandidateViewModel
+@{
+    ViewData["Title"] = "Crear Candidato";
+}
+
+<div class="container mt-4">
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @ViewBag.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
+
+            <div class="card card-modern shadow-sm">
+                <div class="card-header pt-4">
+                    <div class="text-center">
+                        <h4 class="fw-bold mb-1">Nuevo candidato</h4>
+                        <p class="text-muted small m-1">Completa el perfil del candidato</p>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label text-muted small">Nombre:</label>
+                            <input asp-for="Name" class="form-control">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LastName" class="form-label text-muted small">Apellido:</label>
+                            <input asp-for="LastName" class="form-control">
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Photo" class="form-label text-muted small">Foto del candidato:</label>
+                            <input asp-for="Photo" type="file" class="form-control" />
+                            <span asp-validation-for="Photo" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-check form-switch mb-4">
+                            <input asp-for="Status" class="form-check-input" type="checkbox" checked>
+                            <label class="form-check-label">Candidato activo</label>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-soft-orange">
+                                <i class="bi bi-arrow-left-short"></i> Volver atrás
+                            </a>
+                            <button type="submit" class="btn btn-blue">
+                                <i class="bi bi-floppy2"></i> Guardar
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

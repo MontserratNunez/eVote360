@@ -49,7 +49,7 @@ namespace eVote360.Infrastructure.Persistence.Repositories
         }
         public virtual async Task<List<Entity>> GetAllList()
         {
-            return await _context.Set<Entity>().ToListAsync(); //EF - immediate execution
+            return await _context.Set<Entity>().ToListAsync();
         }
 
         public virtual async Task<List<Entity>> GetAllListWithInclude(List<string> properties)
@@ -61,7 +61,7 @@ namespace eVote360.Infrastructure.Persistence.Repositories
                 query = query.Include(property);
             }
 
-            return await query.ToListAsync(); //EF - immediate execution
+            return await query.ToListAsync();
         }    
         public virtual async Task<Entity?> GetById(int id)
         {
@@ -69,7 +69,7 @@ namespace eVote360.Infrastructure.Persistence.Repositories
         }
         public virtual IQueryable<Entity> GetAllQuery()
         {
-            return _context.Set<Entity>().AsQueryable();//select * from assetsType // where join //deferred execution
+            return _context.Set<Entity>().AsQueryable();
         }
         public virtual IQueryable<Entity> GetAllQueryWithInclude(List<string> properties)
         {
@@ -80,7 +80,7 @@ namespace eVote360.Infrastructure.Persistence.Repositories
                 query = query.Include(property);
             }
 
-            return query; //EF - deffered execution
+            return query;
         }
     }
 }

@@ -1,0 +1,70 @@
+﻿@using eVote360.Core.Application.ViewModels.User
+
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Login Page";
+    Layout = "_LayoutAnonymous";
+}
+
+<div class="col-11 col-sm-8 col-md-4" style="min-width: 350px">
+    <div class="card shadow-sm login-card">
+
+        <div class="mb-3 d-flex align-items-center gap-2">
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#f97316" class="bi bi-person-fill" viewBox="0 0 16 16">
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+            </svg>
+                
+            <span class="h3 fw-bold m-0">eVote360</span>
+        </div>
+
+        <p class="text-muted mb-4">Inicia sesión en tu cuenta</p>
+
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+        <form asp-controller="Login" asp-action="Index" method="post">
+            <div class="form-floating mb-3">
+                <input asp-for="UserName" class="form-control" id="floatingInput" placeholder="Usuario">
+                <label for="floatingInput">Usuario</label>
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-4">
+                <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="Contraseña">
+                <label for="floatingPassword">Contraseña</label>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="login-btn">Iniciar sesión</button>
+        </form>
+    </div>
+</div>
+
+
+<style>
+
+    .login-card {
+        border-radius: 12px;
+        padding: 2rem;
+    }
+
+    .login-btn {
+        background: #212529;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        width: 100%;
+        transition: 0.3s;
+    }
+
+    .login-btn:hover {
+        background: #000;
+    }
+
+    .logo {
+        width: 40px;
+        height: 40px;
+    }
+</style>
+

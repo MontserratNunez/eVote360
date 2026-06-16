@@ -1,0 +1,103 @@
+﻿@using eVote360.Core.Application.ViewModels.AssignPosition
+
+@model List<AssignPositionViewModel>
+@{
+    ViewData["Title"] = "Asignación de Puestos";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="page-title">Asignación de Puestos Electivos</h2>
+            <p class="page-subtitle">Listado de candidatos asignados a sus respectivos puestos de elección</p>
+        </div>
+        @if (!ViewBag.HasActiveElection)
+        {
+            <a class="btn btn-blue shadow-sm" asp-action="Create">
+                <i class="bi bi-file-earmark-plus"></i> Asignar Puesto
+            </a>
+        }
+    </div>
+
+    @if (ViewBag.HasActiveElection)
+    {
+        <div class="alert alert-warning d-inline-block p-2">No se pueden modificar puestos electivos mientras exista una elección activa.</div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success border-0 alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger border-0 alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card card-modern shadow-sm">
+        <div class="card-body">
+
+            @if (Model == null || Model.Count == 0)
+            {
+                <div class="text-center p-4">
+                    <i class="bi bi-person-workspace fs-1 text-muted"></i>
+                    <p class="mt-3 text-muted">No hay puestos asignados a candidatos actualmente</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-modern align-middle">
+                        <thead>
+                            <tr>
+                                <th>Candidato</th>
+                                <th>Partido Político</th>
+                                <th>Puesto Asignado</th>
+                                <th>Tipo de Candidatura</th>
+                                @if (!ViewBag.HasActiveElection)
+                                {
+                                    <th class="text-end">Acciones</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="">@item.CandidateName @item.CandidateLastName</td>
+                                    <td class="text-muted">@item.CandidatePartyName</td>
+                                    <td class="text-muted">@item.PositionName</td>
+                                    <td>
+                                        @if (!item.IsAlliance)
+                                        {
+                                            <span class="badge rounded-pill badge-blue badge-role">@item.CandidateType</span>
+                                        }else{
+                                            <span class="badge rounded-pill badge-orange badge-role">@item.CandidateType</span>
+                                        }
+                                        
+                                    </td>
+                                    @if (!ViewBag.HasActiveElection)
+                                    {
+                                        <td class="text-end">
+                                            <a class="btn btn-sm btn-danger" asp-action="ConfirmDelete" asp-route-id="@item.Id">
+                                                <i class="bi bi-trash"></i> Eliminar relación
+                                            </a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

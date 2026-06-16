@@ -1,0 +1,241 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
+body {
+    overflow: hidden;
+}
+
+
+@media (min-width: 992px) {
+    #sidebar {
+        visibility: visible !important;
+        position: static;
+        transform: none;
+    }
+}
+
+
+footer{
+    position: relative !important;
+}
+
+
+
+#sidebar .nav-link.active {
+    background-color: #5c636a;
+}
+
+#sidebar .nav-link:hover {
+    background-color: #2D3137;
+}
+
+#sidebar .nav-link.active {
+    background-color: #5c636a;
+    color: #fff;
+}
+
+body {
+    background-color: #f5f6f8;
+}
+
+.card {
+    border: 1px solid #ECECEC
+}
+
+.card-modern {
+    border-radius: 12px;
+}
+
+
+
+
+
+.btn-orange {
+    background-color: #f97316;
+    color: white;
+    border: none;
+}
+
+    .btn-orange:hover {
+        background-color: #ea580c;
+        color: white;
+    }
+
+.btn-soft-orange {
+    background-color: #ffecdf;
+    color: #f97316;
+}
+
+    .btn-soft-orange:hover {
+        background-color: #f97316;
+        color: white;
+    }
+
+.btn-dark-custom {
+    background-color: #212529;
+    color: #fff;
+    border: none;
+}
+
+    .btn-dark-custom:hover {
+        background-color: #000;
+    }
+
+.btn-soft-blue {
+    background-color: #eef4ff;
+    color: #3b82f6;
+    border: none;
+}
+
+    .btn-soft-blue:hover {
+        background-color: #3b82f6;
+        color: white;
+    }
+
+.btn-blue {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+}
+
+    .btn-blue:hover {
+        background-color: #1265ec;
+        color: white;
+    }
+
+.blue {
+    background-color: #3b82f6;
+}
+
+.orange {
+    background-color: #f97316;
+}
+
+.lima {
+    background-color: #22c55e;
+}
+
+.grey {
+    background-color: #6c757d;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.badge-role {
+    min-width: 80px;
+}
+
+.badge-status {
+    min-width: 65px;
+}
+
+
+
+.badge-blue {
+    background-color: #ededed;
+    color: #3b82f6;
+}
+
+.badge-orange {
+    background-color: #ededed;
+    color: #f97316;
+}
+
+.badge-active {
+    background-color: #ededed;
+    color: #22c55e;
+}
+
+.badge-inactive {
+    background-color: #ededed;
+    color: #6c757d;
+}
+
+
+
+
+
+
+
+
+.table-modern th {
+    font-weight: 600;
+    color: #6b7280;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid #E9E9E9;
+}
+
+.table-modern td {
+    border-top: 1px solid #f1f1f1;
+}
+
+
+
+
+
+
+
+
+.page-title {
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.page-subtitle {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+
+
+
+
+.form-check-input:checked {
+    background-color: #f97316;
+    border-color: #f97316;
+}
+
+
+
+
+.img-table {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}

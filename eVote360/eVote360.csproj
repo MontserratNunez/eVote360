@@ -4,10 +4,10 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>3dc2932f-19ff-4b11-9358-e9c1f642d4fd</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.16">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\eVote360.Core.Application.csproj" />
+    <ProjectReference Include="..\eVote.Infraestructure.Shared\eVote360.Infraestructure.Shared.csproj" />
     <ProjectReference Include="..\Persistence\eVote360.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 

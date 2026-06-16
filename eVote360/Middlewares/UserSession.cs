@@ -40,6 +40,7 @@ namespace eVote360.Middlewares
             return userViewModel;
         }
 
+
         public bool IsAdmin()
         {
             UserViewModel? userViewModel = _httpContextAccessor.HttpContext?
@@ -50,7 +51,7 @@ namespace eVote360.Middlewares
                 return false;
             }
 
-            return userViewModel.Role == (int)Role.ADMIN;
+            return userViewModel.Role == Role.ADMIN;
         }
     }
 }

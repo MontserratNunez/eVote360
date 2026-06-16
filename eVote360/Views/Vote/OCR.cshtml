@@ -1,0 +1,93 @@
+﻿@model eVote360.Core.Application.ViewModels.Vote.OcrValidationViewModel
+@{
+    ViewData["Title"] = "Validación por OCR";
+    Layout = "_LayoutAnonymous";
+}
+
+<div class="container mt-5">
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger border-0 alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-exclamation-octagon-fill me-2"></i> @ViewBag.Error
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5">
+            <div class="card card-modern shadow-sm border-0 mt-4">
+                <div class="card-header pt-5 pb-3 bg-transparent border-0 text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-camera-fill text-primary fs-1"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">Escanear Cédula</h3>
+                    <p class="text-muted small px-3">Sube una fotografía clara del frente de tu cédula de identidad para procesarla automáticamente.</p>
+                </div>
+
+                <div class="card-body p-4">
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    <form asp-action="Ocr" method="post" enctype="multipart/form-data" id="ocrForm">
+
+                        <div class="mb-4 text-center">
+                            <div id="previewContainer" class="d-none mb-3">
+                                <img id="imagePreview" src="#" alt="Previsualización de la cédula" class="img-fluid rounded shadow-sm border" style="max-height: 200px; object-fit: contain;" />
+                            </div>
+
+                            <label asp-for="File" class="form-label text-muted small fw-bold d-block text-start">Fotografía del documento:</label>
+                            <input asp-for="File" type="file" class="form-control" accept="image/*" id="ocrInput" />
+                            <span asp-validation-for="File" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-blue py-2 shadow-sm" id="btnSubmit">Validar identidad</button>
+
+                            <div id="loadingIndicator" class="text-center d-none my-2">
+                                <div class="spinner-border text-primary spinner-border-sm" role="status"></div>
+                                <span class="text-muted small ms-2">Analizando imagen y extrayendo datos...</span>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const ocrInput = document.getElementById('ocrInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewContainer = document.getElementById('previewContainer');
+            const ocrForm = document.getElementById('ocrForm');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+
+            ocrInput.addEventListener('change', function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imagePreview.setAttribute('src', e.target.result);
+                        previewContainer.classList.remove('d-none');
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    previewContainer.classList.add('d-none');
+                }
+            });
+
+            ocrForm.addEventListener('submit', function () {
+                if ($(ocrForm).valid()) {
+                    btnSubmit.disabled = true;
+                    loadingIndicator.classList.remove('d-none');
+                }
+            });
+        });
+    </script>
+}

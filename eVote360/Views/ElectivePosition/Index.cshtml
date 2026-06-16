@@ -1,0 +1,116 @@
+﻿@using eVote360.Core.Application.ViewModels.ElectivePosition
+
+@model List<ElectivePositionViewModel>
+@{
+    ViewData["Title"] = "Puestos Electivos";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="page-title">Puestos Electivos</h2>
+            <p class="page-subtitle">Listado de puestos electivos registrados</p>
+        </div>
+            @if(!ViewBag.HasActiveElection)
+            {
+            <a class="btn btn-blue shadow-sm" asp-action="Create">
+                <i class="bi bi-file-earmark-plus"></i> Crear puesto electivo
+            </a>
+            }
+    </div>
+
+    @if (ViewBag.HasActiveElection)
+    {
+        <div class="alert alert-warning d-inline-block p-2">No se pueden modificar puestos electivos mientras exista una elección activa.</div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success border-0 alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger border-0 alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card card-modern shadow-sm">
+        <div class="card-body">
+
+            @if (Model.Count == 0)
+            {
+                <div class="text-center p-4">
+                    <i class="bi bi-person-badge fs-1 text-muted"></i>
+                    <p class="mt-3 text-muted">No hay puestos electivos registrados</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-modern align-middle">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                @if (!ViewBag.HasActiveElection)
+                                {
+                                    <th class="text-end">Acciones</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@item.Name</td>
+                                    <td class="text-muted">@item.Description</td>
+                                    <td>
+                                        @if (item.Status)
+                                        {
+                                            <span class="badge rounded-pill badge-active badge-status">Activo</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge rounded-pill badge-inactive badge-status">Inactivo</span>
+                                        }
+                                    </td>
+                                    @if (!ViewBag.HasActiveElection)
+                                    {
+                                        <td class="text-end">
+                                            <a class="btn btn-sm btn-orange me-1" asp-action="Edit" asp-route-id="@item.Id">
+                                                <i class="bi bi-pencil-square"></i> Editar
+                                            </a>
+
+                                            @if (!item.Status)
+                                            {
+                                                <a class="btn btn-sm btn-success" asp-action="Confirm" asp-route-id="@item.Id" asp-route-activate="true">
+                                                    <i class="bi bi-check-circle"></i> Activar
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-sm btn-danger" asp-action="Confirm" asp-route-id="@item.Id" asp-route-activate="false">
+                                                    <i class="bi bi-ban"></i> Desactivar
+                                                </a>
+                                            }
+
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

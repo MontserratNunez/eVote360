@@ -1,0 +1,29 @@
+﻿@functions {
+    string IsActive(string controller)
+    {
+        var current = ViewContext.RouteData.Values["controller"]?.ToString();
+        return current == controller ? "active" : "";
+    }
+}
+
+<li class="nav-item">
+    <a class="nav-link text-light @IsActive("HomeAdmin")" asp-area="" asp-controller="HomeAdmin" asp-action="Index">Home</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link text-light @IsActive("ElectivePosition")" asp-area="" asp-controller="ElectivePosition" asp-action="Index">Puestos electivos</a>
+</li>
+<li>
+    <a class="nav-link text-light @IsActive("Citizen")" asp-area="" asp-controller="Citizen" asp-action="Index">Ciudadanos</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link text-light @IsActive("PoliticalParty")" asp-area="" asp-controller="PoliticalParty" asp-action="Index">Partidos políticos</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link text-light @IsActive("User")" asp-area="" asp-controller="User" asp-action="Index">Usuarios</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link text-light @IsActive("PoliticalLeader")" asp-area="" asp-controller="PoliticalLeader" asp-action="Index">Asignar dirigente</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link text-light @IsActive("Election")" asp-area="" asp-controller="Election" asp-action="Index">Elecciones</a>
+</li>
