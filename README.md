@@ -41,7 +41,11 @@
    ```bash
    dotnet ef database update --project Persistence --startup-project eVote360
    ```
-
+5. **Default user**
+   
+| username | password |
+| :--- | :--- |
+| Admin | 123 |
 
 ## 4. Folder Structure
 The solution is structured following the principles of the Onion Architecture to ensure separation of concerns:
