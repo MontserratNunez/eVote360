@@ -14,7 +14,6 @@
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/MontserratNunez/eVote360.git
-   cd eVote360
    ```
 
 2. **Configure Database Connection:**
@@ -43,10 +42,6 @@
    dotnet ef database update --project Persistence --startup-project eVote360
    ```
 
-5. **Run the Application:**
-   ```bash
-   dotnet run --project eVote360
-   ```
 
 ## 4. Folder Structure
 The solution is structured following the principles of the Onion Architecture to ensure separation of concerns:
@@ -63,8 +58,8 @@ The solution is structured following the principles of the Onion Architecture to
 The Administrator has full control over the electoral setup and system maintenance. Key features include:
 - **Dashboard & Electoral Summary:** View historical election results filtered by year, including participating parties, candidates, and voter turnout.
 - **Election Management:** Create, activate, and finalize elections. Modifying critical data is strictly blocked when an election is actively running.
-- **Elective Positions:** Manage available public offices (e.g., Mayor, Senator).
-- **Citizens Registry:** Maintain the database of eligible voters (Padrón Electoral).
+- **Elective Positions:** Manage available public offices.
+- **Citizens Registry:** Maintain the database of eligible voters.
 - **Political Parties:** Register and manage political organizations, their acronyms, and logos.
 - **User Management:** Create system users and assign roles (`Admin` or `Political Leader`).
 
@@ -72,4 +67,4 @@ The Administrator has full control over the electoral setup and system maintenan
 The Political Leader acts on behalf of a specific political party and manages their electoral strategy. Key features include:
 - **Candidate Management:** Register citizens as candidates for their party. Candidate affiliation is handled automatically based on the leader's session context to prevent unauthorized assignments.
 - **Political Alliances:** Send, accept, or reject alliance requests with other political parties for upcoming elections.
-- **Assign Candidates to Positions:** Place active candidates into elective positions for a pending election. Leaders can assign their own candidates or allied candidates (provided an accepted alliance exists and strict assignment rules are met).
+- **Assign Candidates to Positions:** Place active candidates into elective positions for a pending election. Leaders can assign their own candidates or allied candidates.
