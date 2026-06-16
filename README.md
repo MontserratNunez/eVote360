@@ -32,8 +32,7 @@
    "EmailConfiguration": {
      "Host": "smtp.gmail.com",
      "Port": 587,
-     "Mail": "your_email@gmail.com",
-     "DisplayName": "eVote360 System",
+     "Email": "your_email",
      "Password": "your_app_password"
    }
    ```
